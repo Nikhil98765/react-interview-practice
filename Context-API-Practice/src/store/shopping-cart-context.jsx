@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer, useState } from "react";
 import { DUMMY_PRODUCTS } from "../dummy-products";
 
 export const CartContext = createContext({
@@ -7,15 +7,13 @@ export const CartContext = createContext({
   onUpdateItemQuantity: () => {},
 });
 
+const shoppingCartReducer = (state, action) => {
+  const { type, payload } = action;
 
-export const CartContextProvider = ({ children }) => {
-  const [shoppingCart, setShoppingCart] = useState({
-    items: [],
-  });
-
-  function handleAddItemToCart(id) {
-    setShoppingCart(prevShoppingCart => {
-      const updatedItems = [...prevShoppingCart.items];
+  switch (type) {
+    case 'ADD_ITEM': {
+      const id = payload.id;
+      const updatedItems = [...state.items];
 
       const existingCartItemIndex = updatedItems.findIndex(
         cartItem => cartItem.id === id
@@ -37,16 +35,14 @@ export const CartContextProvider = ({ children }) => {
           quantity: 1,
         });
       }
-
       return {
-        items: updatedItems,
-      };
-    });
-  }
-
-  function handleUpdateCartItemQuantity(productId, amount) {
-    setShoppingCart(prevShoppingCart => {
-      const updatedItems = [...prevShoppingCart.items];
+        ...state,
+        items: updatedItems
+      }
+    }
+    case 'UPDATE_ITEM_QUANTITY': {
+      const { productId, amount } = payload;
+      const updatedItems = [...state.items];
       const updatedItemIndex = updatedItems.findIndex(
         item => item.id === productId
       );
@@ -64,15 +60,24 @@ export const CartContextProvider = ({ children }) => {
       }
 
       return {
+        ...state,
         items: updatedItems,
       };
-    });
+    }
   }
+
+}
+
+
+export const CartContextProvider = ({ children }) => {
+  const [shoppingCart, shoppingCartDispatch] = useReducer(shoppingCartReducer, {
+    items: []
+  })
 
   const ctxValue = {
     items: shoppingCart.items,
-    onAddToCart: handleAddItemToCart,
-    onUpdateItemQuantity: handleUpdateCartItemQuantity,
+    onAddToCart: id => shoppingCartDispatch({ type: "ADD_ITEM" , payload: {id}}),
+    onUpdateItemQuantity: (productId, amount) => shoppingCartDispatch({ type: "UPDATE_ITEM_QUANTITY", payload: { productId, amount } }),
   };
 
   return (
