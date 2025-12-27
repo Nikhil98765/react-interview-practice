@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { CartContext } from "../store/shopping-cart-context";
 
 export default function Cart() {
@@ -14,8 +13,8 @@ export default function Cart() {
           (acc, item) => acc + item.price * item.quantity,
           0
         );
-        const formattedTotalPrice = `$${totalPrice.toFixed(2)}`
-        
+        const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
+
         return (
           <div id="cart">
             {items.length === 0 && <p>No items in cart!</p>}
@@ -31,11 +30,15 @@ export default function Cart() {
                         <span> ({formattedPrice})</span>
                       </div>
                       <div className="cart-item-actions">
-                        <button onClick={() => onUpdateItemQuantity(item.id, -1)}>
+                        <button
+                          onClick={() => onUpdateItemQuantity(item.id, -1)}
+                        >
                           -
                         </button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => onUpdateItemQuantity(item.id, 1)}>
+                        <button
+                          onClick={() => onUpdateItemQuantity(item.id, 1)}
+                        >
                           +
                         </button>
                       </div>
@@ -47,10 +50,9 @@ export default function Cart() {
             <p id="cart-total-price">
               Cart Total: <strong>{formattedTotalPrice}</strong>
             </p>
-        </div>
+          </div>
         );
       }}
-      
     </CartContext.Consumer>
   );
 }
