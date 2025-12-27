@@ -19,7 +19,7 @@ export default [
         sourceType: 'module',
       },
     },
-    settings: { react: { version: '18.3' } },
+    settings: { react: { version: '19' } },
     plugins: {
       react,
       'react-hooks': reactHooks,
@@ -32,7 +32,7 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       ...prettierConfig.rules,
-      'prettier/prettier': 'error',
+      // 'prettier/prettier': 'error',
       'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': [
         'warn',
