@@ -3,6 +3,9 @@ Context-API-Practice/dist/
 
 redux-basics/node_modules
 
+redux-practice/node_modules
+redux-practice/dist
+
 .vscode
 .idea
 .DS_Store
