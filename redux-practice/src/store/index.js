@@ -3,6 +3,7 @@ import { createStore } from 'redux';
 export const ACTIONS = {
   INCREMENT: "INCREMENT",
   DECREMENT: "DECREMENT",
+  INCREASE: "INCREASE",
 };
 
 const reducer = (state = {counter: 0}, action) => {
@@ -15,6 +16,11 @@ const reducer = (state = {counter: 0}, action) => {
     return {
       counter: state.counter - 1,
     };
+  }
+  if (action.type === ACTIONS.INCREASE) {
+    return {
+      counter: state.counter + action.payload.increaseValue
+    }
   }
 
   return state;
