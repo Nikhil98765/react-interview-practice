@@ -1,18 +1,23 @@
-// import { createStore } from 'redux';
+import { createStore } from 'redux';
 
-// const reducer = (state, action) => {
-//   if (action.type === 'INCREMENT') {
-//     return {
-//       counter : state.counter + 1
-//     }
-//   }
-//   if (action.type === "DECREMENT") {
-//     return {
-//       counter: state.counter - 1,
-//     };
-//   }
+export const ACTIONS = {
+  INCREMENT: "INCREMENT",
+  DECREMENT: "DECREMENT",
+};
 
-//   return state;
-// }
+const reducer = (state = {counter: 0}, action) => {
+  if (action.type === ACTIONS.INCREMENT) {
+    return {
+      counter: state.counter + 1,
+    };
+  }
+  if (action.type === ACTIONS.DECREMENT) {
+    return {
+      counter: state.counter - 1,
+    };
+  }
 
-// export const store = createStore(reducer);
+  return state;
+}
+
+export const store = createStore(reducer);
