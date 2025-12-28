@@ -59,13 +59,11 @@ const mapStateToProps = (state, componentProps) => {
   }
 }
 
-// Dispatch to props shorthand
-const increment = () => ({type: ACTIONS.INCREMENT})
-const decrement = () => ({type: ACTIONS.DECREMENT})
-
-const mapDispatchToProps = {
-  increment,
-  decrement
+const mapDispatchToProps = (dispatch, componentProps) => {
+  return {
+    increment: () => dispatch({ type: ACTIONS.INCREMENT }),
+    decrement: () => dispatch({type: ACTIONS.DECREMENT})
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Counter);
