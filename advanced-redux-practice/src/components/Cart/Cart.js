@@ -6,7 +6,7 @@ import CartItem from './CartItem';
 
 const Cart = (props) => {
   const cartItems = useSelector(state => state.cart.items);
-  const total = useSelector(state => state.cart.total);
+  const totalPrice = useSelector(state => state.cart.totalPrice);
   
 
   return (
@@ -20,7 +20,7 @@ const Cart = (props) => {
             {cartItems.map((item) => (
               <CartItem
                 key={item.title}
-                item={{ ...item, total }}
+                item={{ ...item, total: totalPrice }}
               />
             ))}
           </ul>
