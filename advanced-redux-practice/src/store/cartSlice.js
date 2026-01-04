@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { uiActions } from './uiSlice';
+
 const INITIAL_STATE = {
   items: [],
   totalPrice: 0,
-  totalQuantity: 0,
-  show: false
+  totalQuantity: 0
 };
 
 export const { reducer: cartReducer, actions: cartActions } = createSlice({
@@ -39,9 +40,50 @@ export const { reducer: cartReducer, actions: cartActions } = createSlice({
       }
       state.totalQuantity -= 1;
       state.totalPrice -= action.payload.price;
-    },
-    toggle: (state) => {
-      state.show = !state.show;
     }
   }
 });
+
+export const sendCartData = (cartData) => {
+  return async (dispatch) => {
+    dispatch(
+      uiActions.showNotification({
+        status: "pending",
+        title: "Sending...",
+        message: "Sending cart data!",
+      }));
+    
+    const sendRequest = async () => {
+      const response = await fetch(
+        "https://advanced-redux-eefd3-default-rtdb.firebaseio.com/cart.json",
+        {
+          method: "PUT",
+          body: JSON.stringify(cartData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to send cart data");
+      }
+    };
+
+    try {
+      await sendRequest();
+      dispatch(
+        uiActions.showNotification({
+          status: "success",
+          title: "Success !",
+          message: "Cart data sent successfully !",
+        })
+      );
+    } catch (error) {
+      dispatch(
+        uiActions.showNotification({
+          status: "error",
+          title: "Error !",
+          message: "Failed to send cart data",
+        })
+      );
+    } 
+  };
+};
