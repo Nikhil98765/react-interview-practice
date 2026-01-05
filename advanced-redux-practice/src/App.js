@@ -4,7 +4,7 @@ import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import { useEffect } from 'react';
 import { Notification } from './components/UI/Notification';
-import { sendCartData } from './store/cartSlice';
+import { fetchCartData, sendCartData } from './store/cartSlice';
 
 let initialRender = true;
 
@@ -14,15 +14,23 @@ function App() {
   const showCart = useSelector(state => state.ui.showCart);
   const cartState = useSelector(state => state.cart);
   const notification = useSelector(state => state.ui.notification);
+  const isStateChanged = useSelector(state => state.cart.changed);
+
+  useEffect(() => {
+    dispatch(fetchCartData());
+  }, []);
 
   useEffect(() => {
     if (initialRender) {
       initialRender = false;
       return;
     }
-    dispatch(sendCartData(cartState));
 
-  }, [cartState, dispatch]);
+    if (isStateChanged) {
+      dispatch(sendCartData(cartState)); 
+    }
+
+  }, [cartState, dispatch, isStateChanged]);
 
   return (
     <>

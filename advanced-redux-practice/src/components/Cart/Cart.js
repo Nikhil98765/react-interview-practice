@@ -4,10 +4,8 @@ import Card from '../UI/Card';
 import classes from './Cart.module.css';
 import CartItem from './CartItem';
 
-const Cart = (props) => {
+const Cart = () => {
   const cartItems = useSelector(state => state.cart.items);
-  const totalPrice = useSelector(state => state.cart.totalPrice);
-  
 
   return (
     <Card className={classes.cart}>
@@ -20,7 +18,7 @@ const Cart = (props) => {
             {cartItems.map((item) => (
               <CartItem
                 key={item.title}
-                item={{ ...item, total: totalPrice }}
+                item={item}
               />
             ))}
           </ul>
