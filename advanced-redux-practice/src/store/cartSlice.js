@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { uiActions } from './uiSlice';
 
@@ -51,34 +51,49 @@ export const { reducer: cartReducer, actions: cartActions } = createSlice({
         totalQuantity
       };
     }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchCartData.pending, (state, action) => {
+      // set loading state
+      console.log("🚀 ~ fetchCartData.pending ~ action:", action);
+    });
+    builder.addCase(fetchCartData.fulfilled, (state, action) => {
+        const { items, totalQuantity } = action.payload;
+        return {
+          items: items || [],
+          totalQuantity,
+        };
+    });
+    builder.addCase(fetchCartData.rejected, (state, action) => {
+      // set error state
+      console.log("🚀 ~ fetchCartData.rejected ~ action:", action);
+    });
   }
 });
 
-export const sendCartData = (cartData) => {
-  return async (dispatch) => {
+export const sendCartData = createAsyncThunk('cart/sendCartData', async (cartData, {dispatch, rejectWithValue}) => {
     dispatch(
       uiActions.showNotification({
         status: "pending",
         title: "Sending...",
         message: "Sending cart data!",
-      }));
-    
-    const sendRequest = async () => {
-      const response = await fetch(
-        "https://advanced-redux-eefd3-default-rtdb.firebaseio.com/cart.json",
-        {
-          method: "PUT",
-          body: JSON.stringify({items: cartData.items, totalQuantity: cartData.totalQuantity}),
-        }
-      );
+    }));
 
-      if (!response.ok) {
-        throw new Error("Failed to send cart data");
+    const sendRequest = async () => {
+    const response = await fetch(
+      "https://advanced-redux-eefd3-default-rtdb.firebaseio.com/cart.json",
+      {
+        method: "PUT",
+        body: JSON.stringify({items: cartData.items, totalQuantity: cartData.totalQuantity}),
       }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to send cart data");
+    }
     };
 
-    try {
-      await sendRequest();
+  try {
       dispatch(
         uiActions.showNotification({
           status: "success",
@@ -86,6 +101,7 @@ export const sendCartData = (cartData) => {
           message: "Cart data sent successfully !",
         })
       );
+      await sendRequest();
     } catch (error) {
       dispatch(
         uiActions.showNotification({
@@ -94,18 +110,18 @@ export const sendCartData = (cartData) => {
           message: "Failed to send cart data",
         })
       );
+      rejectWithValue('Failed to send cart data');
     } 
-  };
-};
+});
 
-export const fetchCartData = () => {
-  return async (dispatch) => {
+export const fetchCartData = createAsyncThunk('cart/fetchCartData', async (_, {dispatch, rejectWithValue}) => {
     dispatch(
       uiActions.showNotification({
         status: "pending",
         title: "Fetching...",
         message: "Fetching cart data!",
-      }));
+      })
+    );
     const fetchRequest = async () => {
       const response = await fetch(
         "https://advanced-redux-eefd3-default-rtdb.firebaseio.com/cart.json"
@@ -119,7 +135,6 @@ export const fetchCartData = () => {
 
     try {
       const data = await fetchRequest();
-      dispatch(cartActions.replaceCart(data));
       dispatch(
         uiActions.showNotification({
           status: "success",
@@ -127,6 +142,7 @@ export const fetchCartData = () => {
           message: "Cart data fetched successfully !",
         })
       );
+      return data;
     } catch (error) {
       dispatch(
         uiActions.showNotification({
@@ -135,6 +151,6 @@ export const fetchCartData = () => {
           message: "Failed to fetch cart data",
         })
       );
+      rejectWithValue('Failed to fetch cart data');
     }
-  };
-};
+});
