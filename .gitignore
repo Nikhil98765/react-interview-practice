@@ -12,6 +12,9 @@ advanced-redux-practice/dist
 component-patterns/node_modules
 component-patterns/dist
 
+hooks-practice/node_modules
+hooks-practice/dist
+
 .vscode
 .idea
 .DS_Store
