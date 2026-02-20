@@ -15,6 +15,9 @@ component-patterns/dist
 hooks-practice/node_modules
 hooks-practice/dist
 
+performance-optimization/node_modules
+performance-optimization/dist
+
 .vscode
 .idea
 .DS_Store
