@@ -1,12 +1,22 @@
 import React, { useRef } from 'react'
 
+/**
+ * Form handling 
+ *      - using useRef (uncontrolled)
+ *      - using FormData API (uncontrolled)
+ * */ 
+
 export const UnControlled = () => {
-  const nameRef = useRef('');
-   const emailRef = useRef("");
+  // const nameRef = useRef('');
+  //  const emailRef = useRef("");
  
    function handleSubmit(e) {
      e.preventDefault();
-     console.log(nameRef.current.value, emailRef.current.value);
+     //  console.log(nameRef.current.value, emailRef.current.value);
+    //  Using FormData API
+     const formData = new FormData(e.target);
+     const formObj = Object.fromEntries(formData.entries());
+     console.log("🚀 ~ handleSubmit ~ formObj:", formObj)
    }
  
    return (
@@ -16,7 +26,7 @@ export const UnControlled = () => {
          <input
            type="text"
            id="name"
-           ref={nameRef}
+           name="name"
          />
        </div>
        <div>
@@ -24,7 +34,7 @@ export const UnControlled = () => {
          <input
            type="text"
            id="email"
-           ref={emailRef}
+           name="email"
          />
        </div>
        <button>Submit</button>

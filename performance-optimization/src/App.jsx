@@ -1,6 +1,6 @@
-import { Controlled } from "./components/Controlled"
+import { Controlled } from "./components/form-handling/Controlled"
 import { LazyLoadingExample } from "./components/LazyLoadingExample"
-import { UnControlled } from "./components/UnControlled"
+import { UnControlled } from "./components/form-handling/UnControlled"
 
 
 function App() {

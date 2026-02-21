@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+// Form handling - using useState (controlled)
 export const Controlled = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
