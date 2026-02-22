@@ -18,6 +18,9 @@ hooks-practice/dist
 performance-optimization/node_modules
 performance-optimization/dist
 
+router-practice/node_modules
+router-practice/dist
+
 .vscode
 .idea
 .DS_Store
