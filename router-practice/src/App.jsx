@@ -10,6 +10,7 @@ import { Profile } from "./components/Profile";
 
 function App() {
 
+  // Both Routes tag will render individually based on the URL.
   return (
     <BrowserRouter>
       <Routes>
@@ -18,13 +19,16 @@ function App() {
         <Route path="/users/:id" element={<UserProfile />}></Route>
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
-          <Route path='settings' element={<Settings />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
+      <Routes>
+        <Route path="/about1" element={<About />}></Route>
+      </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
 export default App
