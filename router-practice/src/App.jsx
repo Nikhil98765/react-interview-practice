@@ -13,9 +13,27 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Home />,
-    errorElement: <Error />
+    errorElement: <Error />,
+  },
+  { path: '/about', element: <About /> },
+  {
+    path: '/dashboard', element: <DashboardLayout />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />
+      },
+      {
+        path: 'settings',
+        element: <Settings />
+      },
+      {
+        path: 'profile',
+        element: <Profile />
+      }
+    ]
   }
-])
+]);
 
 function App() {
 
