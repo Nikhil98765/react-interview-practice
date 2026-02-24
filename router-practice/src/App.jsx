@@ -13,38 +13,50 @@ import { Products } from "./components/Products";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <Home />,
     errorElement: <Error />,
   },
-  { path: '/about', element: <About /> },
+  { path: "/about", element: <About /> },
   {
-    path: '/dashboard', element: <DashboardLayout />,
+    path: "/dashboard",
+    element: <DashboardLayout />,
     children: [
       {
         index: true,
-        element: <Dashboard />
+        element: <Dashboard />,
+        id: 'dashboardData',
+        loader: async () => {
+          const posts = await fetch(
+            "https://jsonplaceholder.typicode.com/posts",
+          );
+          console.log("🚀 ~ Inside loader function ~ posts");
+          return posts.json();
+        },
       },
       {
-        path: 'settings',
-        element: <Settings />
+        path: "settings",
+        element: <Settings />,
       },
       {
-        path: 'profile',
-        element: <Profile />
-      }
-    ]
+        path: "profile",
+        element: <Profile />,
+      },
+    ],
   },
   {
-    path: '/products', element: <Products />
+    path: "/products",
+    id: "productsPage",
+    element: <Products />,
   },
   {
-    path: '/products/:productId', element: <ProductDetails />
+    path: "/products/:productId",
+    element: <ProductDetails />,
   },
   {
-    path: '*',
-    element: <NotFound />
-  }
+    path: "*",
+    element: <NotFound />,
+  },
 ]);
 
 function App() {

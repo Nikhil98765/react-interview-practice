@@ -1,7 +1,11 @@
 import React from 'react'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useRouteLoaderData } from 'react-router-dom'
 
 export const DashboardLayout = () => {
+
+  const data = useRouteLoaderData('dashboardData');
+  console.log("🚀 ~ DashboardLayout ~ data:", data)
+
   return (
     <>
       <h2>DashboardLayout</h2>
