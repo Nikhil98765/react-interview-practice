@@ -42,23 +42,6 @@ const router = createBrowserRouter([
 function App() {
 
   return (
-    // <BrowserRouter>
-    //   <Routes>
-    //     <Route path="/" element={<Home />} errorElement={<Error />}></Route>
-    //     <Route path="/about" element={<About />}></Route>
-    //     <Route path="/users/:id" element={<UserProfile />}></Route>
-    //     <Route path="/dashboard" element={<DashboardLayout />}>
-    //       <Route index element={<Dashboard />} />
-    //       <Route path="settings" element={<Settings />} />
-    //       <Route path="profile" element={<Profile />} />
-    //     </Route>
-    //     {/* <Route path="*" element={<NotFound />}></Route> */}
-    //   </Routes>
-    //   <Routes>
-    //     <Route path="/about1" element={<About />}></Route>
-    //   </Routes>
-    // </BrowserRouter>
-
     <RouterProvider router={router}/>
   );
 }
