@@ -4,7 +4,7 @@ import { UserProfile } from "./components/UserProfile"
 import { NotFound } from "./components/NotFound"
 import { Home } from './components/Home';
 import { DashboardLayout } from "./components/DashboardLayout";
-import { Dashboard } from "./components/Dashboard";
+import { Dashboard, loader as dashboardLoader} from "./components/Dashboard";
 import { Settings } from "./components/Settings";
 import { Profile } from "./components/Profile";
 import { Error } from "./components/Error";
@@ -25,14 +25,8 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Dashboard />,
-        id: 'dashboardData',
-        loader: async () => {
-          const posts = await fetch(
-            "https://jsonplaceholder.typicode.com/posts",
-          );
-          console.log("🚀 ~ Inside loader function ~ posts");
-          return posts.json();
-        },
+        id: "dashboardData",
+        loader: dashboardLoader,
       },
       {
         path: "settings",

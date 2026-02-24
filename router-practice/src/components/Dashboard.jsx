@@ -11,3 +11,11 @@ export const Dashboard = () => {
     </>
   );
 }
+
+export const loader =  async () => {
+  const posts = await fetch(
+    "https://jsonplaceholder.typicode.com/posts",
+  );
+  console.log("🚀 ~ Inside loader function ~ posts");
+  return posts.json();
+}
