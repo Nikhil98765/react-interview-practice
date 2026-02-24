@@ -30,6 +30,8 @@ export const Dashboard = () => {
 
 export const loader = async () => {
 
+  throw new Error('Error in dashboard loader');
+
   return {
     user: fetchPosts(),
     resolvedData: await fetchPost()

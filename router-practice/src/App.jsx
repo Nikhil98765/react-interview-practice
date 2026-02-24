@@ -15,7 +15,6 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
-    errorElement: <Error />,
   },
   { path: "/about", element: <About /> },
   {
@@ -26,6 +25,7 @@ const router = createBrowserRouter([
         index: true,
         element: <Dashboard />,
         id: "dashboardData",
+        errorElement: <Error />,
         loader: dashboardLoader,
       },
       {
