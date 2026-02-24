@@ -8,6 +8,8 @@ import { Dashboard } from "./components/Dashboard";
 import { Settings } from "./components/Settings";
 import { Profile } from "./components/Profile";
 import { Error } from "./components/Error";
+import { ProductDetails } from "./components/ProductDetails";
+import { Products } from "./components/Products";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,12 @@ const router = createBrowserRouter([
         element: <Profile />
       }
     ]
+  },
+  {
+    path: '/products', element: <Products />
+  },
+  {
+    path: '/products/:productId', element: <ProductDetails />
   },
   {
     path: '*',
