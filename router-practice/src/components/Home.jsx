@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 
 export const Home = () => {
 
+  // throw new Error('Error occurred');
+
   return (
     <div>
       Home
