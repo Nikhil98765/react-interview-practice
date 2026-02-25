@@ -13,3 +13,9 @@ export const ProductDetails = () => {
     </>
   );
 }
+
+export const loader = async ({request, params}) => {
+  console.log("🚀 ~ loader ~ params:", params)
+  // Fetch any data using the params and return it to the component.
+  
+}
