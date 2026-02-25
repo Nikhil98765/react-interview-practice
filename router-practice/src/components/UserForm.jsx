@@ -1,10 +1,13 @@
 import React from 'react'
-import { data, Form, useActionData, useSubmit } from 'react-router-dom';
+import { data, Form, useActionData, useNavigation, useSubmit } from 'react-router-dom';
 
 export const UserForm = () => {
 
   const actionData = useActionData();
   const submit = useSubmit();
+  const navigation = useNavigation();
+
+  const isSubmitting = navigation.state === 'submitting';
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -23,7 +26,7 @@ export const UserForm = () => {
       <form onSubmit={handleSubmit}>
         <input type="text" id="userName" name="userName" />
         {actionData?.error && <p>{actionData.error}</p>}
-        <button>submit</button>
+        <button disabled={ isSubmitting }>{isSubmitting ? 'Submitting...' : 'Click'}</button>
       </form>
     </>
   );
@@ -35,8 +38,11 @@ export const action = async ({request, params}) => {
 
   if (userName === '') {
     // return {error: 'user name should not be empty'}
-    throw data({message: 'Failed to submit data'}, {status: 500})
+    setTimeout(() => { 
+      throw data({ message: "Failed to submit data" }, { status: 500 });
+    }, 3000);
   }
+
 
   await fetch("https://jsonplaceholder.typicode.com/posts", {
     method: "POST",
