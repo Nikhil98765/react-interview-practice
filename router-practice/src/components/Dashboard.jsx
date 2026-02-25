@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react'
-import { redirect, useLoaderData, Await } from 'react-router-dom';
+import { redirect, useLoaderData, Await, data } from 'react-router-dom';
 import { fetchPost, fetchPosts } from '../utils/data-service';
 
 export const Dashboard = () => {
   const { user, resolvedData } = useLoaderData();
-  // console.log("🚀 ~ Dashboard ~ user:", user);
+  console.log("🚀 ~ Dashboard ~ user:", user);
 
   return (
     <>
@@ -30,12 +30,14 @@ export const Dashboard = () => {
 
 export const loader = async () => {
 
-  throw new Error('Error in dashboard loader');
+  // throw new Error('Error in dashboard loader');
+  
+  throw data({message: 'Failed to fetch posts'}, {status: '404'})
 
-  return {
-    user: fetchPosts(),
-    resolvedData: await fetchPost()
-  }
+  // return {
+  //   user: fetchPosts(),
+  //   resolvedData: await fetchPost()
+  // }
 
   // return redirect('/products');
 
