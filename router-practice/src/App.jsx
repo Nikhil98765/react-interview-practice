@@ -10,6 +10,7 @@ import { Profile } from "./components/Profile";
 import { Error } from "./components/Error";
 import { ProductDetails, loader as productDetailsLoader } from "./components/ProductDetails";
 import { Products } from "./components/Products";
+import { UserForm, action as userFormAction } from "./components/UserForm";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,12 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />,
+  },
+  {
+    path: "/form",
+    element: <UserForm />,
+    action: userFormAction,
+    errorElement: <Error />
   },
 ]);
 
