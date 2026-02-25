@@ -1,18 +1,30 @@
 import React from 'react'
-import { data, Form, useActionData } from 'react-router-dom';
+import { data, Form, useActionData, useSubmit } from 'react-router-dom';
 
 export const UserForm = () => {
 
   const actionData = useActionData();
+  const submit = useSubmit();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    // const formObject = Object.fromEntries(formData.entries());
+    // submit(formObject, {
+    //   method: "POST",
+    //   encType: 'application/x-www-form-urlencoded'
+    // });
+    submit(formData, {method: 'POST'})
+  }
 
   return (
     <>
       <h3>User Form</h3>
-      <Form method="POST">
+      <form onSubmit={handleSubmit}>
         <input type="text" id="userName" name="userName" />
         {actionData?.error && <p>{actionData.error}</p>}
         <button>submit</button>
-      </Form>
+      </form>
     </>
   );
 }
