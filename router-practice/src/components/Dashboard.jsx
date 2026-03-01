@@ -4,7 +4,6 @@ import { fetchPost, fetchPosts } from '../utils/data-service';
 
 export const Dashboard = () => {
   const { user, resolvedData } = useLoaderData();
-  console.log("🚀 ~ Dashboard ~ user:", user);
 
   return (
     <>
@@ -18,8 +17,13 @@ export const Dashboard = () => {
         <Suspense fallback={<p>Loading Posts...</p>}>
           <Await resolve={user}>
             {(data) => {
-              console.log("🚀 ~ Dashboard ~ data:", data);
-              return <h1>data</h1>;
+              return (
+                <ul>
+                  {
+                    data.map(item => <li key={item.id}>{ item.title }</li>)
+                  }
+                </ul>
+              )
             }}
           </Await>
         </Suspense>
@@ -35,8 +39,8 @@ export const loader = async () => {
   // throw data({message: 'Failed to fetch posts'}, {status: '404'})
 
   return {
-    user: fetchPosts(),
-    resolvedData: await fetchPost()
+    resolvedData: await fetchPost(),
+    user: fetchPosts()
   }
 
   // return redirect('/products');
