@@ -32,12 +32,12 @@ export const loader = async () => {
 
   // throw new Error('Error in dashboard loader');
   
-  throw data({message: 'Failed to fetch posts'}, {status: '404'})
+  // throw data({message: 'Failed to fetch posts'}, {status: '404'})
 
-  // return {
-  //   user: fetchPosts(),
-  //   resolvedData: await fetchPost()
-  // }
+  return {
+    user: fetchPosts(),
+    resolvedData: await fetchPost()
+  }
 
   // return redirect('/products');
 
