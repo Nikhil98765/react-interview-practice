@@ -23,6 +23,11 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     id: 'root',
     loader: tokenLoader,
+    // Optimizing the re-run of root loader for only /login and /logout routes.
+    shouldRevalidate: ({ formAction }) => {
+      if (formAction === '/logout' || formAction === '/login') return true;
+      return false;
+    },
     children: [
       { index: true, element: <HomePage /> },
       {
