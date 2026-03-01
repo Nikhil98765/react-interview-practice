@@ -1,6 +1,7 @@
 import { Outlet, useNavigation } from 'react-router-dom';
 
 import MainNavigation from '../components/MainNavigation';
+import { getToken } from '../utils/auth';
 
 function RootLayout() {
   // const navigation = useNavigation();
@@ -14,6 +15,10 @@ function RootLayout() {
       </main>
     </>
   );
+}
+
+export const loader = () => {
+  return getToken();
 }
 
 export default RootLayout;
