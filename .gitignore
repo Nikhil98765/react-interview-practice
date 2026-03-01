@@ -21,6 +21,12 @@ performance-optimization/dist
 router-practice/node_modules
 router-practice/dist
 
+auth-practice/frontend/node_modules
+auth-practice/frontend/dist
+
+auth-practice/backend/node_modules
+auth-practice/backend/dist
+
 .vscode
 .idea
 .DS_Store
