@@ -7,7 +7,7 @@ function AuthenticationPage() {
 
 export const action = async ({ request }) => {
   const searchParams = new URL(request.url).searchParams;
-  const mode = searchParams.get('mode');
+  const mode = searchParams.get('mode') || 'login';
   
   const formData = await request.formData();
   const authObj = {

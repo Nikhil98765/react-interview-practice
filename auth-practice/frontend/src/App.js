@@ -15,17 +15,18 @@ import { action as manipulateEventAction } from './components/EventForm';
 import NewsletterPage, { action as newsletterAction } from './pages/Newsletter';
 import AuthenticationPage, { action as authAction } from './pages/Authentication';
 import { action as logoutAction } from './pages/Logout';
+import { checkAuthLoader } from './utils/auth';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     errorElement: <ErrorPage />,
-    id: 'root',
+    id: "root",
     loader: tokenLoader,
     // Optimizing the re-run of root loader for only /login and /logout routes.
     shouldRevalidate: ({ formAction }) => {
-      if (formAction === '/logout' || formAction === '/login') return true;
+      if (formAction === "/logout" || formAction === "/login") return true;
       return false;
     },
     children: [
@@ -47,11 +48,13 @@ const router = createBrowserRouter([
               {
                 index: true,
                 element: <EventDetailPage />,
+                loader: checkAuthLoader,
                 action: deleteEventAction,
               },
               {
                 path: "edit",
                 element: <EditEventPage />,
+                loader: checkAuthLoader,
                 action: manipulateEventAction,
               },
             ],
@@ -59,6 +62,7 @@ const router = createBrowserRouter([
           {
             path: "new",
             element: <NewEventPage />,
+            loader: checkAuthLoader,
             action: manipulateEventAction,
           },
         ],
@@ -74,9 +78,9 @@ const router = createBrowserRouter([
         action: authAction,
       },
       {
-        path: 'logout',
-        action: logoutAction
-      }
+        path: "logout",
+        action: logoutAction,
+      },
     ],
   },
 ]);
