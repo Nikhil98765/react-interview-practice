@@ -11,53 +11,65 @@ import { Error } from "./components/Error";
 import { ProductDetails, loader as productDetailsLoader } from "./components/ProductDetails";
 import { Products } from "./components/Products";
 import { UserForm, action as userFormAction } from "./components/UserForm";
+import { action as newsLetterAction } from './components/Newsletter';
+import Layout from "./components/Layout";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
-  },
-  { path: "/about", element: <About /> },
-  {
-    path: "/dashboard",
-    element: <DashboardLayout />,
+    element: <Layout />,
     children: [
       {
         index: true,
-        element: <Dashboard />,
-        id: "dashboardData",
+        element: <Home />,
+      },
+      { path: "/about", element: <About /> },
+      {
+        path: "/dashboard",
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />,
+            id: "dashboardData",
+            errorElement: <Error />,
+            loader: dashboardLoader,
+          },
+          {
+            path: "settings",
+            element: <Settings />,
+          },
+          {
+            path: "profile",
+            element: <Profile />,
+          },
+        ],
+      },
+      {
+        path: "/products",
+        id: "productsPage",
+        element: <Products />,
+      },
+      {
+        path: "/products/:productId",
+        element: <ProductDetails />,
+        loader: productDetailsLoader,
+      },
+      {
+        path: "/form",
+        element: <UserForm />,
+        action: userFormAction,
         errorElement: <Error />,
-        loader: dashboardLoader,
       },
       {
-        path: "settings",
-        element: <Settings />,
+        path: "/newsletter",
+        action: newsLetterAction,
       },
       {
-        path: "profile",
-        element: <Profile />,
+        path: "*",
+        element: <NotFound />,
       },
     ],
-  },
-  {
-    path: "/products",
-    id: "productsPage",
-    element: <Products />,
-  },
-  {
-    path: "/products/:productId",
-    element: <ProductDetails />,
-    loader: productDetailsLoader,
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
-  {
-    path: "/form",
-    element: <UserForm />,
-    action: userFormAction,
-    errorElement: <Error />
   },
 ]);
 
