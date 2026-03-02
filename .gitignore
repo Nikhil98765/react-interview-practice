@@ -27,6 +27,9 @@ auth-practice/frontend/dist
 auth-practice/backend/node_modules
 auth-practice/backend/dist
 
+react-with-typescript/node_modules
+react-with-typescript/dist
+
 .vscode
 .idea
 .DS_Store
