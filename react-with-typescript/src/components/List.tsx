@@ -1,6 +1,8 @@
-interface ListProps<T> {
+import type { PropsWithChildren } from "react";
+
+interface ListProps<T> extends PropsWithChildren {
   items: T[];
-  renderItem: (item: T) => React.ReactNode
+  renderItem: (item: T) => React.ReactNode;
 }
 
 export const List = <T,>({ items, renderItem }: ListProps<T>) => {
