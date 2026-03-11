@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from "react"
+import type { ComponentPropsWithoutRef, MouseEvent, MouseEventHandler } from "react"
 
 type ButtonProps = ComponentPropsWithoutRef<'button'> & {
   label: string;
@@ -8,8 +8,17 @@ type ButtonProps = ComponentPropsWithoutRef<'button'> & {
 //   label: string;
 // }
 
-export const Button: React.FC<ButtonProps> = ({ label, ...rest}: ButtonProps) => {
+export const Button: React.FC<ButtonProps> = ({ label, ...rest }: ButtonProps) => {
+  
+  const clickHandler:  MouseEventHandler<HTMLButtonElement> = (event) => {
+
+  }
+
+  const clickHandler1 = (event: MouseEvent<HTMLButtonElement>) => {
+
+  }
+
   return (
-    <button {...rest}>{ label }</button>
+    <button {...rest} onClick={clickHandler}>{ label }</button>
   )
 }
