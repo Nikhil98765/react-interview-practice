@@ -1,12 +1,15 @@
 
 import React, { forwardRef, type ComponentPropsWithoutRef } from 'react';
+import { useToggle } from '../hooks/useToggle';
 
 type InputProps = ComponentPropsWithoutRef<'input'> & {
   label: string;
   error?: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, ...rest }, ref)  => {
+export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, ...rest }, ref) => {
+  const [val, toggle] = useToggle(false);
+
   return (
     <div>
       <label htmlFor="input">{label}</label>
