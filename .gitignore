@@ -30,6 +30,10 @@ auth-practice/backend/dist
 react-with-typescript/node_modules
 react-with-typescript/dist
 
+tanstack-query/node_modules
+tanstack-query/backend/node_modules
+tanstack-query/dist
+
 .vscode
 .idea
 .DS_Store
