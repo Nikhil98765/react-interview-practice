@@ -30,6 +30,9 @@ auth-practice/backend/dist
 react-with-typescript/node_modules
 react-with-typescript/dist
 
+async-and-side-effects/node_modules
+async-and-side-effects/dist
+
 .vscode
 .idea
 .DS_Store
