@@ -11,7 +11,7 @@ export default function NewEventsSection() {
     queryKey: ['events'],
     queryFn: fetchEvents,
     // staleTime: 5000,
-    gcTime: 30000
+    // gcTime: 30000
   })
 
   let content;
