@@ -1,43 +1,48 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, redirect, useNavigate, useNavigation, useParams, useSubmit } from 'react-router-dom';
 
 import Modal from '../UI/Modal.jsx';
 import EventForm from './EventForm.jsx';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchEvent, queryClient, updateEvent } from '../../utils/http.js';
-import LoadingIndicator from '../UI/LoadingIndicator.jsx';
 import ErrorBlock from '../UI/ErrorBlock.jsx';
+
+const eventQuery = (id) => ({
+  queryKey: ["events", id],
+  queryFn: ({ signal }) => fetchEvent({ id, signal }),
+  staleTime: 10000
+});
 
 export default function EditEvent() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const submit = useSubmit();
+  const { state } = useNavigation();
+  
+  const { data, error, isError } = useQuery(eventQuery(id));
 
-  const { data, error, isError, isPending } = useQuery({
-    queryKey: ['events', id],
-    queryFn: ({ signal }) => fetchEvent({ id, signal })
-  });
+  // const { mutate } = useMutation({
+  //   mutationFn: updateEvent,
+  //   onMutate: async ({ event, id }) => {
 
-  const { mutate } = useMutation({
-    mutationFn: updateEvent,
-    onMutate: async ({ event, id }) => {
+  //     await queryClient.cancelQueries(['events', id]);
+  //     const previousEventData = queryClient.getQueryData(['events', id]);
 
-      await queryClient.cancelQueries(['events', id]);
-      const previousEventData = queryClient.getQueryData(['events', id]);
+  //     queryClient.setQueryData(['events', id], event);
 
-      queryClient.setQueryData(['events', id], event);
-
-      return {previousEventData}
-    },
-    onError: (error, data, context) => {
-      queryClient.setQueryData(['events', id], context.previousEventData);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(['events', id]);
-    }
-  })
+  //     return {previousEventData}
+  //   },
+  //   onError: (error, data, context) => {
+  //     queryClient.setQueryData(['events', id], context.previousEventData);
+  //   },
+  //   onSettled: () => {
+  //     queryClient.invalidateQueries(['events', id]);
+  //   }
+  // })
 
   function handleSubmit(formData) {
-    mutate({ id, event: formData });
-    navigate('../');
+    // mutate({ id, event: formData });
+    // navigate('../');
+    submit(formData, {method: 'PUT'});
   }
 
   function handleClose() {
@@ -45,12 +50,6 @@ export default function EditEvent() {
   }
 
   let content;
-
-  if (isPending) {
-    content = <div className='center'>
-      <LoadingIndicator />
-    </div>
-  }
 
   if (isError) {
     content = (
@@ -72,12 +71,18 @@ export default function EditEvent() {
   if (data) {
     content = (
       <EventForm inputData={data} onSubmit={handleSubmit}>
-        <Link to="../" className="button-text">
-          Cancel
-        </Link>
-        <button type="submit" className="button">
-          Update
-        </button>
+        {state === "submitting" ? (
+          <p>Submitting...</p>
+        ) : (
+          <>
+            <Link to="../" className="button-text">
+              Cancel
+            </Link>
+            <button type="submit" className="button">
+              Update
+            </button>
+          </>
+        )}
       </EventForm>
     );
   }
@@ -87,4 +92,17 @@ export default function EditEvent() {
       {content}
     </Modal>
   );
+}
+
+export const loader = async ({params}) => {
+  await queryClient.ensureQueryData(eventQuery(params.id));
+  return null;
+}
+
+export const action = async ({request, params}) => {
+  const formData = await request.formData();
+  const formObj = Object.fromEntries(formData);
+  await updateEvent({ id: params.id, event: formObj });
+  queryClient.invalidateQueries(['events']);
+  return redirect('../');
 }
