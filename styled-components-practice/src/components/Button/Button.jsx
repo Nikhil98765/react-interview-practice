@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import logo from '../../assets/react.svg';
+import Logo from '../../assets/react.svg?react';
 
 import styles from './Button.module.css';
 
@@ -38,6 +40,8 @@ export const Button = () => {
       <StyledButton $variant="primary">Primary</StyledButton>
       <StyledButton $variant="secondary">secondary</StyledButton>
       <StyledButton $disabled>Disabled</StyledButton>
+      <img src={logo} alt="react logo" width={50} height={50} />
+      <Logo styles={{ backgroundColor: "gray" }} fill="currentColor" />
     </>
   );
 }
