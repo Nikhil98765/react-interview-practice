@@ -37,6 +37,9 @@ tanstack-query/dist
 styled-components-practice/node_modules
 styled-components-practice/dist
 
+real-world-scenarios/node_modules
+real-world-scenarios/dist
+
 .vscode
 .idea
 .DS_Store
