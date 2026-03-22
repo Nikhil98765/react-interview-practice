@@ -1,4 +1,7 @@
-import React from 'react'
+import React from 'react';
+
+
+cons
 
 export const List = ({items}) => {
   return (
