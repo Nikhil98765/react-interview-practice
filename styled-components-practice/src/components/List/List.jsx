@@ -1,8 +1,6 @@
 import React from 'react';
 
 
-cons
-
 export const List = ({items}) => {
   return (
     <ul>
