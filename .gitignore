@@ -34,6 +34,9 @@ tanstack-query/node_modules
 tanstack-query/backend/node_modules
 tanstack-query/dist
 
+styled-components-practice/node_modules
+styled-components-practice/dist
+
 .vscode
 .idea
 .DS_Store

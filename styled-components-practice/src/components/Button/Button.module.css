@@ -1,0 +1,16 @@
+.my-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.primary {
+  /* composes: my-button; */
+  composes: p-5 from '../List/List.module.css';
+  background: cornflowerblue;
+  color: white;
+}
+
+.secondary {
+  background: gray;
+  color: white;
+}
