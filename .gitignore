@@ -40,6 +40,9 @@ styled-components-practice/dist
 real-world-scenarios/node_modules
 real-world-scenarios/dist
 
+real-world-scenarios-js/node_modules
+real-world-scenarios-js/dist
+
 .vscode
 .idea
 .DS_Store
