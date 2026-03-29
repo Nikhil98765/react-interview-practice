@@ -43,6 +43,9 @@ real-world-scenarios/dist
 real-world-scenarios-js/node_modules
 real-world-scenarios-js/dist
 
+intersection-observer-js/node_modules
+intersection-observer-js/dist
+
 .vscode
 .idea
 .DS_Store
