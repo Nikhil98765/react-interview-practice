@@ -2,11 +2,12 @@ const cards = document.querySelectorAll(".card");
 const cardContainer = document.querySelector('.card-container');
 
 const observer = new IntersectionObserver((entries) => {
+  console.log("🚀 ~ entries:", entries)
   entries.forEach((entry) => {
     entry.target.classList.toggle("show", entry.isIntersecting);
   });
 }, {
-  threshold: 0
+  threshold: 1
 });
 
 cards.forEach((card) => {
@@ -14,17 +15,17 @@ cards.forEach((card) => {
 });
 
 // Infinite scrolling
-const lastCardObserver = new IntersectionObserver(entries => { 
-  const lastCard = entries[0];
-  if (!lastCard.isIntersecting) return;
-  loadNewCards();
-  lastCardObserver.unobserve(lastCard.target);
-  lastCardObserver.observe(document.querySelector(".card:last-child"));
-}, {
-  rootMargin: '10px'
-});
+// const lastCardObserver = new IntersectionObserver(entries => { 
+//   const lastCard = entries[0];
+//   if (!lastCard.isIntersecting) return;
+//   loadNewCards();
+//   lastCardObserver.unobserve(lastCard.target);
+//   lastCardObserver.observe(document.querySelector(".card:last-child"));
+// }, {
+//   rootMargin: '10px'
+// });
 
-lastCardObserver.observe(document.querySelector('.card:last-child'));
+// lastCardObserver.observe(document.querySelector('.card:last-child'));
 
 
 function loadNewCards() {
