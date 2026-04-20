@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import './utils/debouncing-throttling';
 import { InfiniteScrolling } from './components/InfiniteScrolling';
+import { FileUpload } from './components/FileUpload';
 
 function App() {
 
@@ -25,7 +26,8 @@ function App() {
 
   return (
     // <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
-    <InfiniteScrolling />
+    // <InfiniteScrolling />
+    <FileUpload />
   )
 }
 
