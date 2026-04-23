@@ -4,6 +4,7 @@ import './utils/debouncing-throttling';
 import { InfiniteScrolling } from './components/InfiniteScrolling';
 import { FileUpload } from './components/FileUpload';
 import { MultiFileUpload } from './components/MultiFileUpload';
+import { UploadProgress } from './components/UploadProgress';
 
 function App() {
 
@@ -29,7 +30,8 @@ function App() {
     // <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
     // <InfiniteScrolling />
     // <FileUpload />
-    <MultiFileUpload />
+    // <MultiFileUpload />
+    <UploadProgress />
   )
 }
 
