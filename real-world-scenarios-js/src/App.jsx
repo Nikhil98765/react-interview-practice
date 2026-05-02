@@ -5,6 +5,7 @@ import { InfiniteScrolling } from './components/InfiniteScrolling';
 import { FileUpload } from './components/FileUpload';
 import { MultiFileUpload } from './components/MultiFileUpload';
 import { UploadProgress } from './components/UploadProgress';
+import { Chat } from './components/Chat';
 
 function App() {
 
@@ -31,7 +32,8 @@ function App() {
     // <InfiniteScrolling />
     // <FileUpload />
     // <MultiFileUpload />
-    <UploadProgress />
+    // <UploadProgress />
+    <Chat></Chat>
   )
 }
 
