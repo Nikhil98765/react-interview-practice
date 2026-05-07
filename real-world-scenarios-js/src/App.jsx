@@ -6,6 +6,7 @@ import { FileUpload } from './components/FileUpload';
 import { MultiFileUpload } from './components/MultiFileUpload';
 import { UploadProgress } from './components/UploadProgress';
 import { Chat } from './components/Chat';
+import { ChatUsingHook } from './components/ChatUsingHook';
 
 function App() {
 
@@ -33,7 +34,8 @@ function App() {
     // <FileUpload />
     // <MultiFileUpload />
     // <UploadProgress />
-    <Chat></Chat>
+    // <Chat></Chat>
+    <ChatUsingHook />
   )
 }
 
