@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext';
 import { useAxiosPrivate } from '../hooks/useAxiosPrivate';
+import { useAxios } from '../context/AxiosContext';
 
 export const Dashboard = () => {
 
   const { user, logout } = useAuth();
-  const axiosPrivate = useAxiosPrivate();
+  const axiosPrivate = useAxios();
 
   const [profile, setProfile] = useState(null);
   const [products, setProducts] = useState([]);
