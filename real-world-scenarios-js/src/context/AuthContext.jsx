@@ -15,22 +15,23 @@ export const AuthProvider = ({ children }) => {
       expiresInMins: 30
     }, {withCredentials: true});
 
-    if (!res.ok) throw new Error("Invalid Credentials!");
-
-    const data = await res.json();
-    setAccessToken(data["access_token"]);
-    setUser({ username, password, roles: ["admin"] });
-    return data;
+    setAccessToken(res.data.accessToken);
+    setUser({
+      id: res.data.id,
+      username: res.data.username,
+      email: res.data.email,
+      image: res.data.image
+    });
+    return res.data;
   };
 
   const logout = async () => {
-    await fetch('', { method: 'POST' });
     setUser(null);
     setAccessToken(null);
   }
 
   return (
-    <AuthContext.Provider value={{user, accessToken, login, logout}}>
+    <AuthContext.Provider value={{user, accessToken, setAccessToken, login, logout}}>
       {children}
     </AuthContext.Provider>
   );
