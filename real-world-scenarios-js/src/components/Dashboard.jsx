@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext';
-import { useAxiosPrivate } from '../hooks/useAxiosPrivate';
 import { useAxios } from '../context/AxiosContext';
 
 export const Dashboard = () => {
 
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const axiosPrivate = useAxios();
 
   const [profile, setProfile] = useState(null);
@@ -15,7 +14,7 @@ export const Dashboard = () => {
   useEffect(() => {
     axiosPrivate.get('/auth/me')
       .then(res => setProfile(res.data))
-      .catch((err) => { console.error("❌ Failed to fetch profile:", err); });
+      .catch((err) => console.error("❌ Failed to fetch profile:", err));
     
     axiosPrivate.get('/products?limit=5')
       .then(res => setProducts(res.data.products))

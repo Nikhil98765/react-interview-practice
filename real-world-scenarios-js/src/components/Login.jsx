@@ -10,7 +10,7 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const { login } = useAuth();
+  const { login, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,6 +25,10 @@ export const Login = () => {
     } catch (e) {
       setError(e.message);
     }
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   return (
