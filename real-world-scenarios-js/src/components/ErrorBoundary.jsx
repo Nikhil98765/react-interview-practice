@@ -9,6 +9,7 @@ export class ErrorBoundary extends Component {
   // triggers during render, should not include any side-effects (pure).
   // Why static ? Avoids relying on component instance state or methods. Doesn't set the state directly but React takes the object it returns and uses it as the next state for error boundary
   static getDerivedStateFromError(error) {
+    console.log("🚀 ~ getDerivedStateFromError ~ error:", error)
     return {hasError: true, error}
   }
 
@@ -20,6 +21,7 @@ export class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      console.log("🚀 ~ Fallback renders:", this.props.fallback)
       return this.props.fallback;
     }
     return this.props.children;
