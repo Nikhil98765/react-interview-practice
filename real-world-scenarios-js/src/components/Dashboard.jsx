@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext';
 import { useAxios } from '../context/AxiosContext';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export const Dashboard = () => {
 
   const { logout } = useAuth();
   const axiosPrivate = useAxios();
+  const { showBoundary } = useErrorBoundary();
 
   const [profile, setProfile] = useState(null);
   const [products, setProducts] = useState([]);
@@ -18,9 +20,12 @@ export const Dashboard = () => {
 
 
   useEffect(() => {
-    axiosPrivate.get('/auth/me')
+    axiosPrivate.get('/auth/me1')
       .then(res => setProfile(res.data))
-      .catch((err) => console.error("❌ Failed to fetch profile:", err));
+      .catch((err) => {
+        console.error("❌ Failed to fetch profile:", err);
+        showBoundary(err);
+      });
     
     axiosPrivate.get('/products?limit=5')
       .then(res => setProducts(res.data.products))

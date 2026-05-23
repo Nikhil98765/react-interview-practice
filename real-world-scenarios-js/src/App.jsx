@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes } from "react-router-dom";
+import { ErrorBoundary } from 'react-error-boundary';
 
 import './App.css';
 import './utils/debouncing-throttling';
@@ -17,7 +18,8 @@ import { Profile } from './components/Profile';
 import { RoleRoute } from './components/RoleRoute';
 import { AdminPanel } from './components/AdminPanel';
 import { ModerationPage } from './components/ModerationPage';
-import { ErrorBoundary } from './components/ErrorBoundary';
+import { ErrorFallback } from './components/ErrorFallback';
+// import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
 
@@ -55,12 +57,36 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <ErrorBoundary fallback={<p>Boom! You just triggered a error from dashboard component</p>}>
+            <ErrorBoundary
+              // fallback={
+              //   <p>Boom! You just triggered a error from dashboard component</p>
+              // }
+              FallbackComponent={ErrorFallback}
+              onError={(error, info) => {
+                console.error(`❌ Error: ${error}`);
+                console.error(`❌ Info:`, info.componentStack);
+              }}
+              onReset={(details) => {
+                console.log("🚀 ~ App ~ details:", details)
+                // Reset app state
+              }}
+            >
               <Dashboard />
             </ErrorBoundary>
           }
         ></Route>
-        <Route path="/profile" element={<Profile />}></Route>
+        <Route
+          path="/profile"
+          element={
+            <ErrorBoundary
+              fallback={
+                <p>Boom! You just triggered a error from profile component</p>
+              }
+            >
+              <Profile />
+            </ErrorBoundary>
+          }
+        ></Route>
 
         <Route element={<RoleRoute allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<AdminPanel />}></Route>
