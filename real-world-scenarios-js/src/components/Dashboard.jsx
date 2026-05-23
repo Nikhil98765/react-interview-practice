@@ -20,7 +20,7 @@ export const Dashboard = () => {
 
 
   useEffect(() => {
-    axiosPrivate.get('/auth/me1')
+    axiosPrivate.get('/auth/me')
       .then(res => setProfile(res.data))
       .catch((err) => {
         console.error("❌ Failed to fetch profile:", err);
