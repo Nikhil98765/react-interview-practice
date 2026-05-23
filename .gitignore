@@ -42,6 +42,7 @@ real-world-scenarios/dist
 
 real-world-scenarios-js/node_modules
 real-world-scenarios-js/dist
+real-world-scenarios-js/.unlighthouse
 
 intersection-observer-js/node_modules
 intersection-observer-js/dist
