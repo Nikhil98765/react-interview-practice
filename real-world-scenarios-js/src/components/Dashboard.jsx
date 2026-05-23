@@ -9,6 +9,12 @@ export const Dashboard = () => {
 
   const [profile, setProfile] = useState(null);
   const [products, setProducts] = useState([]);
+  const [error, setError] = useState(false);
+
+
+  if(error) {
+    throw new Error('Boom');
+  }
 
 
   useEffect(() => {
@@ -24,6 +30,7 @@ export const Dashboard = () => {
   return (
     <div>
       <h2>Dashboard</h2>
+      <button onClick={() => setError(true)}>Throw Error</button>
 
       {profile && (
         <div>

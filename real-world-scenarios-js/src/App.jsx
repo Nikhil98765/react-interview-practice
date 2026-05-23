@@ -17,6 +17,7 @@ import { Profile } from './components/Profile';
 import { RoleRoute } from './components/RoleRoute';
 import { AdminPanel } from './components/AdminPanel';
 import { ModerationPage } from './components/ModerationPage';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
 
@@ -51,7 +52,14 @@ function App() {
       <Route path="/unauthorized" element={<UnAuthorizedPage />}></Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route
+          path="/dashboard"
+          element={
+            <ErrorBoundary fallback={<p>Boom! You just triggered a error from dashboard component</p>}>
+              <Dashboard />
+            </ErrorBoundary>
+          }
+        ></Route>
         <Route path="/profile" element={<Profile />}></Route>
 
         <Route element={<RoleRoute allowedRoles={["admin"]} />}>
