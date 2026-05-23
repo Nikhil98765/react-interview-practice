@@ -6,6 +6,7 @@ import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx';
 import { AxiosProvider } from './context/AxiosContext.jsx';
+import { reportWebVitals } from './reportWebVitals.js';
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -19,3 +20,7 @@ createRoot(document.getElementById("root")).render(
   //   <App />
   // </StrictMode>,
 );
+
+reportWebVitals((metric) => {
+  console.log("🚀", metric)
+})
