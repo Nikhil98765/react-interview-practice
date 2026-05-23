@@ -19,6 +19,7 @@ import { RoleRoute } from './components/RoleRoute';
 import { AdminPanel } from './components/AdminPanel';
 import { ModerationPage } from './components/ModerationPage';
 import { ErrorFallback } from './components/ErrorFallback';
+import { PortalsPage } from './components/PortalsPage';
 // import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/unauthorized" element={<UnAuthorizedPage />}></Route>
+      <Route path='/portal-page' element={<PortalsPage />}></Route>
 
       <Route element={<ProtectedRoute />}>
         <Route
