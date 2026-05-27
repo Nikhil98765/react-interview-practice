@@ -12,6 +12,7 @@ export const Dashboard = () => {
   const [profile, setProfile] = useState(null);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
 
   if(error) {
@@ -29,7 +30,8 @@ export const Dashboard = () => {
     
     axiosPrivate.get('/products?limit=5')
       .then(res => setProducts(res.data.products))
-      .catch(err => console.error("❌ Failed to fetch products:", err));
+      .catch(err => console.error("❌ Failed to fetch products:", err))
+      .finally(() => setLoaded(true))
   }, []);
 
   return (
@@ -37,20 +39,31 @@ export const Dashboard = () => {
       <h2>Dashboard</h2>
       <button onClick={() => setError(true)}>Throw Error</button>
 
+      {loaded && <p>Loaded</p>}
       {profile && (
         <div>
           <img src={profile.image} alt={profile.username} width={64} />
-          <p>{profile.firstName} {profile.lastName}</p>
+          <p>
+            {profile.firstName} {profile.lastName}
+          </p>
           <p>{profile.email}</p>
         </div>
       )}
 
-      <h3>Products</h3>
-      <ul>
-        {products.map(product => <li key={product.id}>{product.title} - ${product.price}</li>)}
-      </ul>
+      { (products.length > 0) && 
+        <>
+          <h3>Products</h3>
+          <ul>
+            {products.map((product) => (
+              <li key={product.id}>
+                {product.title} - ${product.price}
+              </li>
+            ))}
+          </ul>
+        </>
+      }
 
       <button onClick={logout}>Logout</button>
     </div>
-  )
+  );
 }
