@@ -13,7 +13,7 @@ import { ChatUsingHook } from './components/ChatUsingHook';
 import { Login } from './components/Login';
 import { UnAuthorizedPage } from './components/UnAuthorizedPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { Dashboard } from './components/Dashboard';
+import { Dashboard } from './components/Dashboard/Dashboard';
 import { Profile } from './components/Profile';
 import { RoleRoute } from './components/RoleRoute';
 import { AdminPanel } from './components/AdminPanel';
