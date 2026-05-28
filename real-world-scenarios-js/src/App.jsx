@@ -25,6 +25,8 @@ import { PortalsPage } from './components/PortalsPage';
 function App() {
 
   const [query, setQuery] = useState('');
+  const apiUrl = import.meta.env.VITE_API_URL
+  console.log("🚀 ~ App ~ apiUrl:", apiUrl);
   // const [debouncedQuery, setDebouncedQuery] = useState('');
 
   // TODO: can be delegated to a custom hook
