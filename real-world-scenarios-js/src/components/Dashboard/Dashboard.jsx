@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext';
-import { useAxios } from '../../context/AxiosContext';
+import { useAxios } from '@/context/AxiosContext';
 import { useErrorBoundary } from 'react-error-boundary';
 
 export const Dashboard = () => {
