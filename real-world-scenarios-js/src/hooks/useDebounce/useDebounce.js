@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react';
 
 export const useDebounce = (value, delay) => {
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -11,4 +11,4 @@ export const useDebounce = (value, delay) => {
   }, [value, delay]);
 
   return debouncedQuery;
-}
+};

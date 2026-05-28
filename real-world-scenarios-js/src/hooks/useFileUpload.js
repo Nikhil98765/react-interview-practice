@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export const useFileUpload = ({ uploadUrl, options = {} }) => {
-  const { maxSizeMB = 5, accept = "*" } = options;
-  
+  const { maxSizeMB = 5, accept = '*' } = options;
+
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState('');
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
-
 
   const handleChange = (e) => {
     const selected = e.target.files[0];
@@ -26,7 +25,7 @@ export const useFileUpload = ({ uploadUrl, options = {} }) => {
     if (selected.type.startsWith('image/')) {
       setPreview(URL.createObjectURL(selected));
     }
-  }
+  };
 
   const handleUpload = (e) => {
     if (!file) {
@@ -43,24 +42,24 @@ export const useFileUpload = ({ uploadUrl, options = {} }) => {
       if (e.lengthComputable) {
         setProgress(Math.round((e.loaded / e.total) * 100));
       }
-    }
+    };
 
     xhr.onload = () => {
       setResult(JSON.parse(xhr.responseText));
       setUploading(false);
       if (preview) {
-        URL.revokeObjectURL(file)
+        URL.revokeObjectURL(file);
       }
-    }
+    };
 
     xhr.onerror = (e) => {
       setError('Upload failed');
       setUploading(false);
-    }
+    };
 
-    xhr.open("POST", uploadUrl);
+    xhr.open('POST', uploadUrl);
     xhr.send(formData);
-  }
+  };
 
   const reset = () => {
     setFile(null);
@@ -68,7 +67,7 @@ export const useFileUpload = ({ uploadUrl, options = {} }) => {
     setResult(null);
     setProgress(0);
     setPreview('');
-  }
+  };
 
   return {
     handleChange,
@@ -79,6 +78,6 @@ export const useFileUpload = ({ uploadUrl, options = {} }) => {
     result,
     file,
     preview,
-    reset
-  }
-}
+    reset,
+  };
+};

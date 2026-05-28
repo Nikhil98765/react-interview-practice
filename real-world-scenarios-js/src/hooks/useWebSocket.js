@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export const useWebSocket = (url) => {
   const [messages, setMessages] = useState([]);
@@ -9,19 +9,18 @@ export const useWebSocket = (url) => {
   const reconnectCount = useRef(0);
   const reconnectTimer = useRef(null);
   const MAX_RECONNECTS = 5;
-  
 
   const connect = useCallback(() => {
     if (wsRef.current) wsRef.current.close();
 
     const ws = new WebSocket(url);
     wsRef.current = ws;
-    
+
     ws.onopen = () => {
       setIsConnected(true);
       reconnectCount.current = 0;
-    }
-    
+    };
+
     ws.onmessage = (e) => {
       let message;
       try {
@@ -29,9 +28,9 @@ export const useWebSocket = (url) => {
       } catch {
         message = e.data;
       }
-      console.log("🚀 ~ useWebSocket ~ message:", message)
-      setMessages(prev => [...prev, message]);
-    }
+      console.log('🚀 ~ useWebSocket ~ message:', message);
+      setMessages((prev) => [...prev, message]);
+    };
 
     ws.onclose = () => {
       setIsConnected(false);
@@ -39,7 +38,7 @@ export const useWebSocket = (url) => {
         reconnectCount.current++;
         reconnectTimer.current = setTimeout(connect, 3000);
       }
-    }
+    };
 
     ws.onerror = (e) => console.error('WebSocket error: ', e);
   }, [url]);
@@ -47,18 +46,20 @@ export const useWebSocket = (url) => {
   useEffect(() => {
     shouldReconnect.current = true;
     connect();
-    
+
     return () => {
       shouldReconnect.current = false;
       clearTimeout(reconnectTimer.current);
       wsRef.current.close();
-    }
+    };
   }, [connect]);
 
-  const sendMessage = useCallback((data) => { 
-    console.log("🚀 ~ useWebSocket ~ data:", data)
+  const sendMessage = useCallback((data) => {
+    console.log('🚀 ~ useWebSocket ~ data:', data);
     if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(typeof data === 'string' ? data : JSON.stringify(data));
+      wsRef.current.send(
+        typeof data === 'string' ? data : JSON.stringify(data),
+      );
     } else {
       console.warn('Websocket not connected, message not sent!');
     }
@@ -70,4 +71,4 @@ export const useWebSocket = (url) => {
   }, []);
 
   return { messages, sendMessage, disconnect, isConnected };
-}
+};

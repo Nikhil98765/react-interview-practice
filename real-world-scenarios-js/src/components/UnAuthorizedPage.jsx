@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export const UnAuthorizedPage = () => {
   return (
@@ -7,4 +7,4 @@ export const UnAuthorizedPage = () => {
       <h6>Won't be able to access the requested resource</h6>
     </div>
   );
-}
+};

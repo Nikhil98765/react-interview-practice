@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export const useInfiniteScroll = (fetchFn) => {
   const [items, setItems] = useState([]);
@@ -7,38 +7,43 @@ export const useInfiniteScroll = (fetchFn) => {
   const [loading, setLoading] = useState(false);
   const observerRef = useRef();
 
-  useEffect(() => { 
+  useEffect(() => {
     let cancelled = false;
 
     setLoading(true);
-    fetchFn(page).then(data => {
+    fetchFn(page).then((data) => {
       if (cancelled) return;
       if (!data.length) {
         setHasMore(false);
       } else {
-        setItems(prev => [...prev, ...data]);
+        setItems((prev) => [...prev, ...data]);
       }
       setLoading(false);
     });
 
-    return () => { cancelled = true; }
-
+    return () => {
+      cancelled = true;
+    };
   }, [page]);
 
+  const lastItemRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observerRef.current) observerRef.current.disconnect();
 
-  const lastItemRef = useCallback(node => {
-    if (loading) return;
-    if (observerRef.current) observerRef.current.disconnect();
+      observerRef.current = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && hasMore) {
+            setPage((prev) => prev + 1);
+          }
+        },
+        { rootMargin: '100px' },
+      );
 
-    observerRef.current = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && hasMore) {
-        setPage(prev => prev + 1);
-      }
-    }, { rootMargin: '100px' });
-
-    if (node) observerRef.current.observe(node);
-  }, [hasMore, loading]);
+      if (node) observerRef.current.observe(node);
+    },
+    [hasMore, loading],
+  );
 
   return { items, lastItemRef, hasMore, loading };
-
-}
+};

@@ -1,24 +1,21 @@
-import { act, renderHook } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, renderHook } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useDebounce } from "./useDebounce";
-
+import { useDebounce } from './useDebounce';
 
 describe('useDebounce hook', () => {
-
   beforeEach(() => {
     // Fake timers let the test move through the debounce delay instantly instead
     // of waiting for real time to pass.
     vi.useFakeTimers();
-  })
+  });
 
   afterEach(() => {
     // Clear pending timeouts and restore real timers so this test setup does not
     // leak into other tests.
     vi.clearAllTimers();
     vi.useRealTimers();
-  })
-
+  });
 
   it('should return debounce query', () => {
     const { result } = renderHook(() => useDebounce('hello', 500));

@@ -1,12 +1,10 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext';
 
 export const Login = () => {
-
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -25,15 +23,15 @@ export const Login = () => {
     } catch (e) {
       setError(e.message);
     }
-  }
+  };
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <div>
         <label htmlFor="username">Username: </label>
         <input
@@ -55,4 +53,4 @@ export const Login = () => {
       <button>Login</button>
     </form>
   );
-}
+};

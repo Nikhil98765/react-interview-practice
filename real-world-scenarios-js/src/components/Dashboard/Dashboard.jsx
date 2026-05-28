@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useAxios } from '@/context/AxiosContext';
 import { useErrorBoundary } from 'react-error-boundary';
 
 export const Dashboard = () => {
-
   const { logout } = useAuth();
   const axiosPrivate = useAxios();
   const { showBoundary } = useErrorBoundary();
@@ -14,24 +13,24 @@ export const Dashboard = () => {
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-
-  if(error) {
+  if (error) {
     throw new Error('Boom');
   }
 
-
   useEffect(() => {
-    axiosPrivate.get('/auth/me')
-      .then(res => setProfile(res.data))
+    axiosPrivate
+      .get('/auth/me')
+      .then((res) => setProfile(res.data))
       .catch((err) => {
-        console.error("❌ Failed to fetch profile:", err);
+        console.error('❌ Failed to fetch profile:', err);
         showBoundary(err);
       });
-    
-    axiosPrivate.get('/products?limit=5')
-      .then(res => setProducts(res.data.products))
-      .catch(err => console.error("❌ Failed to fetch products:", err))
-      .finally(() => setLoaded(true))
+
+    axiosPrivate
+      .get('/products?limit=5')
+      .then((res) => setProducts(res.data.products))
+      .catch((err) => console.error('❌ Failed to fetch products:', err))
+      .finally(() => setLoaded(true));
   }, []);
 
   return (
@@ -50,7 +49,7 @@ export const Dashboard = () => {
         </div>
       )}
 
-      { (products.length > 0) && 
+      {products.length > 0 && (
         <>
           <h3>Products</h3>
           <ul>
@@ -61,9 +60,9 @@ export const Dashboard = () => {
             ))}
           </ul>
         </>
-      }
+      )}
 
       <button onClick={logout}>Logout</button>
     </div>
   );
-}
+};

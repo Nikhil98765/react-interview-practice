@@ -1,26 +1,25 @@
-
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 
 export const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const wsRef = useRef(null);
 
-  useEffect(() => { 
-    const ws = new WebSocket("wss://echo.websocket.org");
+  useEffect(() => {
+    const ws = new WebSocket('wss://echo.websocket.org');
     wsRef.current = ws;
 
     ws.onopen = () => {
-      console.log("🚀 Connected!");
-    }
+      console.log('🚀 Connected!');
+    };
 
     ws.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      console.log("🚀 ~ Chat ~ data:", data)
-      setMessages(prev => [...prev, data]);
-    }
+      console.log('🚀 ~ Chat ~ data:', data);
+      setMessages((prev) => [...prev, data]);
+    };
 
-    ws.onerror = (e) => console.error("❌ Error: ", e);
+    ws.onerror = (e) => console.error('❌ Error: ', e);
     ws.onclose = () => console.log('🚀 Disconnected!');
 
     return () => ws.close();
@@ -31,15 +30,21 @@ export const Chat = () => {
       wsRef.current.send(JSON.stringify({ text: input }));
       setInput('');
     }
-  }
-  
+  };
+
   return (
     <div>
       <div>
-        {messages.map((msg, i) => <p key={i}>{msg.text}</p>)}
+        {messages.map((msg, i) => (
+          <p key={i}>{msg.text}</p>
+        ))}
       </div>
-      <input type="text" value={input} onChange={e => setInput(e.target.value)} />
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
       <button onClick={sendMessages}>Send</button>
     </div>
-  )
-}
+  );
+};

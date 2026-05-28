@@ -1,7 +1,6 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext } from 'react';
 
-import { useAxiosPrivate } from "../hooks/useAxiosPrivate";
-
+import { useAxiosPrivate } from '../hooks/useAxiosPrivate';
 
 const AxiosContext = createContext(null);
 
@@ -13,6 +12,6 @@ export const AxiosProvider = ({ children }) => {
       {children}
     </AxiosContext.Provider>
   );
-}
+};
 
 export const useAxios = () => useContext(AxiosContext);

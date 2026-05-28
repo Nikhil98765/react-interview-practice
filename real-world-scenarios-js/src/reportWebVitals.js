@@ -1,4 +1,4 @@
-import { onCLS, onLCP, onINP, onFCP, onTTFB} from 'web-vitals';
+import { onCLS, onLCP, onINP, onFCP, onTTFB } from 'web-vitals';
 
 export function reportWebVitals(onPerfEntry) {
   if (onPerfEntry && typeof onPerfEntry === 'function') {

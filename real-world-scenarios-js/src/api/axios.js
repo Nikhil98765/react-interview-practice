@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const axiosPrivate = axios.create({
-  baseURL: "https://dummyjson.com",
+  baseURL: 'https://dummyjson.com',
   headers: { 'Content-Type': 'application/json' },
-  withCredentials: true
+  withCredentials: true,
 });
 
 export default axiosPrivate;

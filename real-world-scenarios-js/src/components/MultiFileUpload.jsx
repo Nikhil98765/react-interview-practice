@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 export const MultiFileUpload = () => {
   const [files, setFiles] = useState([]);
 
   const handleChange = (e) => {
-    setFiles(Array.from(e.target.files))
-  }
+    setFiles(Array.from(e.target.files));
+  };
 
   const handleUpload = async () => {
     const formData = new FormData();
-    files.forEach(file => formData.append('file', file));
+    files.forEach((file) => formData.append('file', file));
     await fetch('https://api.escuelajs.co/api/v1/files/upload', {
       method: 'POST',
-      body: formData
+      body: formData,
     });
-  }
+  };
 
   return (
     <div>
@@ -26,7 +26,9 @@ export const MultiFileUpload = () => {
           </li>
         ))}
       </ul>
-      <button onClick={handleUpload} disabled={!files.length}>Upload</button>
+      <button onClick={handleUpload} disabled={!files.length}>
+        Upload
+      </button>
     </div>
   );
-}
+};

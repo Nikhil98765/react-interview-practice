@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import './App.css';
@@ -23,10 +23,9 @@ import { PortalsPage } from './components/PortalsPage';
 // import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
-
   const [query, setQuery] = useState('');
-  const apiUrl = import.meta.env.VITE_API_URL
-  console.log("🚀 ~ App ~ apiUrl:", apiUrl);
+  const apiUrl = import.meta.env.VITE_API_URL;
+  console.log('🚀 ~ App ~ apiUrl:', apiUrl);
   // const [debouncedQuery, setDebouncedQuery] = useState('');
 
   // TODO: can be delegated to a custom hook
@@ -40,9 +39,8 @@ function App() {
   // useEffect(() => {
   //   // Fetch the query based on the debounced query
   //   console.log("🚀 ~ App ~ debouncedQuery:", debouncedQuery)
-    
-  // }, [debouncedQuery]);
 
+  // }, [debouncedQuery]);
 
   return (
     // <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
@@ -55,7 +53,7 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/unauthorized" element={<UnAuthorizedPage />}></Route>
-      <Route path='/portal-page' element={<PortalsPage />}></Route>
+      <Route path="/portal-page" element={<PortalsPage />}></Route>
 
       <Route element={<ProtectedRoute />}>
         <Route
@@ -71,7 +69,7 @@ function App() {
                 console.error(`❌ Info:`, info.componentStack);
               }}
               onReset={(details) => {
-                console.log("🚀 ~ App ~ details:", details)
+                console.log('🚀 ~ App ~ details:', details);
                 // Reset app state
               }}
             >
@@ -92,11 +90,11 @@ function App() {
           }
         ></Route>
 
-        <Route element={<RoleRoute allowedRoles={["admin"]} />}>
+        <Route element={<RoleRoute allowedRoles={['admin']} />}>
           <Route path="/admin" element={<AdminPanel />}></Route>
         </Route>
 
-        <Route element={<RoleRoute allowedRoles={["admin", "moderator"]} />}>
+        <Route element={<RoleRoute allowedRoles={['admin', 'moderator']} />}>
           <Route path="/moderator" element={<ModerationPage />}></Route>
         </Route>
       </Route>
@@ -104,4 +102,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
