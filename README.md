@@ -14,7 +14,8 @@ Each folder explores a specific concept with small, hands-on examples.
 | `hooks-practice` | React hooks experiments including `use()` with `Suspense` and a custom `ErrorBoundary` integration. |
 | `performance-optimization` | Performance-focused examples like lazy loading (`React.lazy`, `Suspense`) and controlled vs uncontrolled form handling. |
 | `real-world-scenarios` | TypeScript-first practice sandbox for practical app patterns (forms + schema validation) using `react-hook-form` and `zod`. |
-| `real-world-scenarios-js` | JavaScript practice sandbox for auth/session handling with Axios, protected routes, and reusable upload, scroll, WebSocket, debounce, and throttle exercises. |
+| `real-world-scenarios-js` | JavaScript practice sandbox with auth/session handling (Axios interceptors, token refresh), role-based routing, error boundaries, React Portals modal, upload/scroll/WebSocket/debounce/throttle exercises, Vitest + RTL tests, React Compiler, and Prettier + Husky pre-commit hooks. |
+| `intersection-observer-js` | Vanilla JavaScript (no React) playground for the Intersection Observer API — scroll-triggered class toggling and an infinite-scroll pattern with dynamic card loading. |
 | `react-with-typescript` | React + TypeScript practice with typed refs, generic components, context/reducer typing, and a custom typed hook. |
 | `redux-basics` | Basic Redux fundamentals in plain JavaScript (store, reducer, dispatch, subscribe) via a small counter demo script. |
 | `redux-practice` | React + Redux Toolkit basics with separate auth/counter slices, global state selection, and conditional UI rendering. |
@@ -35,11 +36,12 @@ Use this order if you want a structured prep path:
 7. `component-patterns` - Strengthen component architecture with compound components, HOCs, and render props.
 8. `styled-components-practice` - Practice modern React styling with `styled-components`, dynamic props, and reusable visual variants.
 9. `react-with-typescript` - Add type safety to common React patterns (refs, generics, typed hooks/context).
-10. `real-world-scenarios-js` - Combine routing, auth state, Axios interceptors, and reusable real-world hooks in JavaScript.
-11. `real-world-scenarios` - Apply TypeScript in practical UI workflows with validated forms (`react-hook-form` + `zod`).
-12. `advanced-redux-practice` - Work with async Redux Toolkit logic and server synchronization.
-13. `tanstack-query` - Shift to server-state management with caching, fetching, and CRUD workflows.
-14. `auth-practice` - Capstone full-stack flow combining auth, protected routes, and backend APIs.
+10. `real-world-scenarios-js` - Combine routing, auth state, Axios interceptors, role-based guards, error boundaries, React Portals, and reusable real-world hooks in JavaScript. Run `npm test` to exercise the Vitest + RTL suite.
+11. `intersection-observer-js` - Step outside React to understand the native Intersection Observer API that powers infinite scroll, lazy loading, and scroll-animation patterns.
+12. `real-world-scenarios` - Apply TypeScript in practical UI workflows with validated forms (`react-hook-form` + `zod`).
+13. `advanced-redux-practice` - Work with async Redux Toolkit logic and server synchronization.
+14. `tanstack-query` - Shift to server-state management with caching, fetching, and CRUD workflows.
+15. `auth-practice` - Capstone full-stack flow combining auth, protected routes, and backend APIs.
 
 If you are short on time, a high-impact fast track is:
 `hooks-practice` -> `Context-API-Practice` -> `redux-practice` -> `router-practice` -> `real-world-scenarios-js` -> `tanstack-query` -> `auth-practice`.
@@ -58,6 +60,23 @@ For `create-react-app` based projects (`redux-practice`, `advanced-redux-practic
 
 ```bash
 npm start
+```
+
+For `intersection-observer-js`, it is a plain HTML/JS project with no framework:
+
+```bash
+cd intersection-observer-js
+npm install
+npm run dev
+```
+
+For `real-world-scenarios-js`, additional useful scripts:
+
+```bash
+npm test            # run Vitest unit tests
+npm run format      # format with Prettier
+npm run lint        # ESLint check
+npm run stage       # staging build + preview
 ```
 
 For `tanstack-query`, run both frontend and backend in separate terminals:
