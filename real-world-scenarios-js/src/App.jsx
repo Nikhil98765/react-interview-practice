@@ -20,6 +20,7 @@ import { AdminPanel } from './components/AdminPanel';
 import { ModerationPage } from './components/ModerationPage';
 import { ErrorFallback } from './components/ErrorFallback';
 import { PortalsPage } from './components/PortalsPage';
+import { Counter } from './components/Counter/Counter';
 // import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
@@ -50,55 +51,56 @@ function App() {
     // <UploadProgress />
     // <Chat></Chat>
     // <ChatUsingHook />
-    <Routes>
-      <Route path="/login" element={<Login />}></Route>
-      <Route path="/unauthorized" element={<UnAuthorizedPage />}></Route>
-      <Route path="/portal-page" element={<PortalsPage />}></Route>
+    // <Routes>
+    //   <Route path="/login" element={<Login />}></Route>
+    //   <Route path="/unauthorized" element={<UnAuthorizedPage />}></Route>
+    //   <Route path="/portal-page" element={<PortalsPage />}></Route>
 
-      <Route element={<ProtectedRoute />}>
-        <Route
-          path="/dashboard"
-          element={
-            <ErrorBoundary
-              // fallback={
-              //   <p>Boom! You just triggered a error from dashboard component</p>
-              // }
-              FallbackComponent={ErrorFallback}
-              onError={(error, info) => {
-                console.error(`❌ Error: ${error}`);
-                console.error(`❌ Info:`, info.componentStack);
-              }}
-              onReset={(details) => {
-                console.log('🚀 ~ App ~ details:', details);
-                // Reset app state
-              }}
-            >
-              <Dashboard />
-            </ErrorBoundary>
-          }
-        ></Route>
-        <Route
-          path="/profile"
-          element={
-            <ErrorBoundary
-              fallback={
-                <p>Boom! You just triggered a error from profile component</p>
-              }
-            >
-              <Profile />
-            </ErrorBoundary>
-          }
-        ></Route>
+    //   <Route element={<ProtectedRoute />}>
+    //     <Route
+    //       path="/dashboard"
+    //       element={
+    //         <ErrorBoundary
+    //           // fallback={
+    //           //   <p>Boom! You just triggered a error from dashboard component</p>
+    //           // }
+    //           FallbackComponent={ErrorFallback}
+    //           onError={(error, info) => {
+    //             console.error(`❌ Error: ${error}`);
+    //             console.error(`❌ Info:`, info.componentStack);
+    //           }}
+    //           onReset={(details) => {
+    //             console.log('🚀 ~ App ~ details:', details);
+    //             // Reset app state
+    //           }}
+    //         >
+    //           <Dashboard />
+    //         </ErrorBoundary>
+    //       }
+    //     ></Route>
+    //     <Route
+    //       path="/profile"
+    //       element={
+    //         <ErrorBoundary
+    //           fallback={
+    //             <p>Boom! You just triggered a error from profile component</p>
+    //           }
+    //         >
+    //           <Profile />
+    //         </ErrorBoundary>
+    //       }
+    //     ></Route>
 
-        <Route element={<RoleRoute allowedRoles={['admin']} />}>
-          <Route path="/admin" element={<AdminPanel />}></Route>
-        </Route>
+    //     <Route element={<RoleRoute allowedRoles={['admin']} />}>
+    //       <Route path="/admin" element={<AdminPanel />}></Route>
+    //     </Route>
 
-        <Route element={<RoleRoute allowedRoles={['admin', 'moderator']} />}>
-          <Route path="/moderator" element={<ModerationPage />}></Route>
-        </Route>
-      </Route>
-    </Routes>
+    //     <Route element={<RoleRoute allowedRoles={['admin', 'moderator']} />}>
+    //       <Route path="/moderator" element={<ModerationPage />}></Route>
+    //     </Route>
+    //   </Route>
+    // </Routes>
+    <Counter />
   );
 }
 
