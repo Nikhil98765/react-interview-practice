@@ -21,12 +21,13 @@ import { ModerationPage } from './components/ModerationPage';
 import { ErrorFallback } from './components/ErrorFallback';
 import { PortalsPage } from './components/PortalsPage';
 import { Counter } from './components/Counter/Counter';
+import { TransitionSearchExample } from './components/TransitionSearchExample';
+import { TransitionTabExample } from './components/TransitionTabExample';
 // import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
   const [query, setQuery] = useState('');
   const apiUrl = import.meta.env.VITE_API_URL;
-  console.log('🚀 ~ App ~ apiUrl:', apiUrl);
   // const [debouncedQuery, setDebouncedQuery] = useState('');
 
   // TODO: can be delegated to a custom hook
@@ -100,7 +101,11 @@ function App() {
     //     </Route>
     //   </Route>
     // </Routes>
-    <Counter />
+    // <Counter />
+    <>
+      <TransitionSearchExample />
+      <TransitionTabExample />
+    </>
   );
 }
 
