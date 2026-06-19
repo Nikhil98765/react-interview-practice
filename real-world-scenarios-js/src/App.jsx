@@ -23,6 +23,7 @@ import { PortalsPage } from './components/PortalsPage';
 import { Counter } from './components/Counter/Counter';
 import { TransitionSearchExample } from './components/TransitionSearchExample';
 import { TransitionTabExample } from './components/TransitionTabExample';
+import { DeferredValueExample } from './components/DeferredValueExample';
 // import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
@@ -103,8 +104,9 @@ function App() {
     // </Routes>
     // <Counter />
     <>
-      <TransitionSearchExample />
-      <TransitionTabExample />
+      {/* <TransitionSearchExample />
+      <TransitionTabExample /> */}
+      <DeferredValueExample />
     </>
   );
 }
