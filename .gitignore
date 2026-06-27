@@ -47,6 +47,9 @@ real-world-scenarios-js/.unlighthouse
 intersection-observer-js/node_modules
 intersection-observer-js/dist
 
+react-router-v6-practice/node_modules
+react-router-v6-practice/dist
+
 .vscode
 .idea
 .DS_Store
