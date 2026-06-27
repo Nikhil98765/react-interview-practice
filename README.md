@@ -20,6 +20,7 @@ Each folder explores a specific concept with small, hands-on examples.
 | `redux-basics` | Basic Redux fundamentals in plain JavaScript (store, reducer, dispatch, subscribe) via a small counter demo script. |
 | `redux-practice` | React + Redux Toolkit basics with separate auth/counter slices, global state selection, and conditional UI rendering. |
 | `router-practice` | React Router practice with nested layouts, dynamic routes, loaders/actions, form actions, and route-level error handling. |
+| `react-router-v6-practice` | React Router v6 auth flow practice with a `Context API`-based `AuthProvider`/`useAuth` hook, login via the DummyJSON auth API, and a `ProtectedRoute` wrapper (`Outlet` + `Navigate`) guarding `/profile`, `/dashboard`, and `/settings`. |
 | `styled-components-practice` | Styling playground with `styled-components` (prop-based button variants), plus CSS Modules composition and SVG component imports via `vite-plugin-svgr`. |
 | `tanstack-query` | Event management app using TanStack Query for server state plus a local Express backend for CRUD APIs. |
 
@@ -32,16 +33,17 @@ Use this order if you want a structured prep path:
 3. `Context-API-Practice` - Practice shared state without Redux using `Context API + useReducer`.
 4. `redux-practice` - Move to Redux Toolkit basics in a React app (auth + counter slices).
 5. `router-practice` - Add routing fundamentals: nested routes, loaders/actions, and error handling.
-6. `performance-optimization` - Learn practical optimization patterns like lazy loading and efficient form handling.
-7. `component-patterns` - Strengthen component architecture with compound components, HOCs, and render props.
-8. `styled-components-practice` - Practice modern React styling with `styled-components`, dynamic props, and reusable visual variants.
-9. `react-with-typescript` - Add type safety to common React patterns (refs, generics, typed hooks/context).
-10. `real-world-scenarios-js` - Combine routing, auth state, Axios interceptors, role-based guards, error boundaries, React Portals, and reusable real-world hooks in JavaScript. Run `npm test` to exercise the Vitest + RTL suite.
-11. `intersection-observer-js` - Step outside React to understand the native Intersection Observer API that powers infinite scroll, lazy loading, and scroll-animation patterns.
-12. `real-world-scenarios` - Apply TypeScript in practical UI workflows with validated forms (`react-hook-form` + `zod`).
-13. `advanced-redux-practice` - Work with async Redux Toolkit logic and server synchronization.
-14. `tanstack-query` - Shift to server-state management with caching, fetching, and CRUD workflows.
-15. `auth-practice` - Capstone full-stack flow combining auth, protected routes, and backend APIs.
+6. `react-router-v6-practice` - Layer auth on top of routing with a Context-based `AuthProvider` and a `ProtectedRoute` that redirects unauthenticated users.
+7. `performance-optimization` - Learn practical optimization patterns like lazy loading and efficient form handling.
+8. `component-patterns` - Strengthen component architecture with compound components, HOCs, and render props.
+9. `styled-components-practice` - Practice modern React styling with `styled-components`, dynamic props, and reusable visual variants.
+10. `react-with-typescript` - Add type safety to common React patterns (refs, generics, typed hooks/context).
+11. `real-world-scenarios-js` - Combine routing, auth state, Axios interceptors, role-based guards, error boundaries, React Portals, and reusable real-world hooks in JavaScript. Run `npm test` to exercise the Vitest + RTL suite.
+12. `intersection-observer-js` - Step outside React to understand the native Intersection Observer API that powers infinite scroll, lazy loading, and scroll-animation patterns.
+13. `real-world-scenarios` - Apply TypeScript in practical UI workflows with validated forms (`react-hook-form` + `zod`).
+14. `advanced-redux-practice` - Work with async Redux Toolkit logic and server synchronization.
+15. `tanstack-query` - Shift to server-state management with caching, fetching, and CRUD workflows.
+16. `auth-practice` - Capstone full-stack flow combining auth, protected routes, and backend APIs.
 
 If you are short on time, a high-impact fast track is:
 `hooks-practice` -> `Context-API-Practice` -> `redux-practice` -> `router-practice` -> `real-world-scenarios-js` -> `tanstack-query` -> `auth-practice`.
