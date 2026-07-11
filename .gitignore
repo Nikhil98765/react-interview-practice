@@ -50,6 +50,12 @@ intersection-observer-js/dist
 react-router-v6-practice/node_modules
 react-router-v6-practice/dist
 
+advanced-js-practice/node_modules
+advanced-js-practice/dist
+
+advanced-ts-practice/node_modules
+advanced-ts-practice/dist
+
 .vscode
 .idea
 .DS_Store
