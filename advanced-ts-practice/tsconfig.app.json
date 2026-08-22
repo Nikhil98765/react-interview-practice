@@ -12,7 +12,10 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
-    "moduleDetection": "legacy",
+    /* "force" keeps every sheet its own module scope, so top-level names in one topic can't
+       collide with another's. Topic 08 needs script files and overrides this in its own
+       tsconfig — see src/topics/08-declaration-merging/tsconfig.json. */
+    "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
 
@@ -20,8 +23,11 @@
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    /* false so `namespace` is allowed — topic 08 needs it. */
     "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  /* Topic 08 is checked by its own tsconfig, which needs different module-detection rules. */
+  "exclude": ["src/topics/08-declaration-merging"]
 }

@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# tsc output when --noEmit is forgotten in the practice folders
+src/**/*.js

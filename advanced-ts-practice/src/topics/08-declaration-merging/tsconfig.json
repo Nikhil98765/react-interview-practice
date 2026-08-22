@@ -1,0 +1,31 @@
+{
+  /* Topic 08 is checked separately from the rest of src/, because declaration merging is the one
+     topic whose lessons depend on files being SCRIPTS rather than modules.
+
+       "moduleDetection": "auto"  — a file with no top-level import/export stays a script. That is
+         what makes global-augmentation.ts §2 (TS2669) and exercise 02a demonstrable at all.
+         The project-wide setting is "force", which would silently hide both.
+
+       "erasableSyntaxOnly": false — namespaces emit runtime code and are banned when true.
+
+     Run from advanced-ts-practice/:
+       npx tsc -p src/topics/08-declaration-merging/tsconfig.json --noEmit
+
+     Deliberate errors are expected — every ❌ in these files marks one. */
+  "compilerOptions": {
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "noEmit": true,
+
+    "moduleDetection": "auto",
+    "erasableSyntaxOnly": false,
+
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": ["."]
+}

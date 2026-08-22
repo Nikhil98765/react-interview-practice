@@ -13,10 +13,10 @@
    👉 THIS TOPIC SPANS 3 FILES — read them in order, they form one chain:
         1. declaration-merging.ts   ← YOU ARE HERE   the RULES: what merges with what
         2. module-augmentation.ts                    the AUGMENTOR: reaching into a module you don't own
-        3. module-augmentation-1.ts                  the CONSUMER: proof it's program-wide + `declare global`
+        3. global-augmentation.ts                  the CONSUMER: proof it's program-wide + `declare global`
       The chain is live code, not prose: this file exports `Session`, file 2 augments it,
       file 3 imports it and sees the augmented members. Interview Q&A lives at the end of file 3.
-      Companion topics: Narrow.ts, Inference.ts, AdvancedTypes.ts.
+      Companion topics: ../02-narrowing/narrowing.ts, ../03-inference/inference.ts, ../06-advanced-types/advanced-types.ts.
 
    ⚙️ TSCONFIG NOTE — this topic needs two non-default flags in tsconfig.app.json:
         "erasableSyntaxOnly": false   -> namespaces emit runtime code, so they're banned without this

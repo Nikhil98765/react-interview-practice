@@ -8,7 +8,7 @@
    👉 THIS TOPIC SPANS 3 FILES — this is the last link:
         1. declaration-merging.ts    the RULES: what merges with what
         2. module-augmentation.ts    the AUGMENTOR: reaching into a module you don't own
-        3. module-augmentation-1.ts ← YOU ARE HERE   the CONSUMER + `declare global` + Q&A
+        3. global-augmentation.ts ← YOU ARE HERE   the CONSUMER + `declare global` + Q&A
       File 1 exports `Session`, file 2 augments it, and §1 below imports it and sees BOTH halves. 🔗
 
    ⚠️ THIS FILE IS DELIBERATELY A SCRIPT (no top-level import/export), because §2's whole point

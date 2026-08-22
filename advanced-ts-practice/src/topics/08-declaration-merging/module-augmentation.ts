@@ -10,7 +10,7 @@
    👉 THIS TOPIC SPANS 3 FILES — this is the middle link:
         1. declaration-merging.ts    the RULES: what merges with what
         2. module-augmentation.ts   ← YOU ARE HERE   the AUGMENTOR: reaching into a module you don't own
-        3. module-augmentation-1.ts  the CONSUMER: proof it's program-wide + `declare global` + Q&A
+        3. global-augmentation.ts  the CONSUMER: proof it's program-wide + `declare global` + Q&A
       This file augments `Session`, which file 1 exports and file 3 consumes. 🔗
 
    CONTENTS
@@ -129,5 +129,5 @@ function makeSession(): Session1 {
       4. Am I adding a VALUE (function/const)? -> then something must implement it at runtime.
       5. Would a wrapper type do instead? -> prefer it; it has no blast radius.
 
-   👉 NEXT: module-augmentation-1.ts — the consumer side, `declare global`, and the interview Q&A.
+   👉 NEXT: global-augmentation.ts — the consumer side, `declare global`, and the interview Q&A.
  */
