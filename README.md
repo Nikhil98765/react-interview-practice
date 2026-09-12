@@ -8,7 +8,9 @@ Each folder explores a specific concept with small, hands-on examples.
 | Project | What it covers |
 | --- | --- |
 | `Context-API-Practice` | A shopping-cart style app using `Context API + useReducer` for shared state, with add/update cart item flows. |
+| `advanced-js-practice` | Framework-free JavaScript revision sheets, each runnable with `node src/<file>.js`: `this`/call/apply/bind with hand-written polyfills, promises & microtask ordering (plus `all`/`allSettled`/`race`/`any` polyfills verified against native), concurrency limiters (worker pool and `pLimit`), retry with exponential backoff, and deep clone/immutability. `event-delegation.html` is a self-documenting page with live bubbling/capture/delegation demos and an on-page console. |
 | `advanced-redux-practice` | Redux Toolkit cart app with async thunks (`fetchCartData` / `sendCartData`) and UI notifications for request states. |
+| `advanced-ts-practice` | Advanced TypeScript topics as numbered lessons in `src/topics` (`01-unknown-any-never` through `08-declaration-merging`) with per-topic exercises and solutions (topic 08 carries its own `tsconfig.json`), type-checked by `npm run build` (`tsc -b`), plus a small Vite + React app in `src/app`. |
 | `auth-practice` | Full-stack auth + events app (`React Router` frontend + `Express` backend) with login/signup, token handling, and protected create/edit/delete routes. |
 | `component-patterns` | Practice playground for common React component patterns: compound components, higher-order components, and render props. |
 | `hooks-practice` | React hooks experiments including `use()` with `Suspense` and a custom `ErrorBoundary` integration. |
@@ -38,12 +40,17 @@ Use this order if you want a structured prep path:
 8. `component-patterns` - Strengthen component architecture with compound components, HOCs, and render props.
 9. `styled-components-practice` - Practice modern React styling with `styled-components`, dynamic props, and reusable visual variants.
 10. `react-with-typescript` - Add type safety to common React patterns (refs, generics, typed hooks/context).
-11. `real-world-scenarios-js` - Combine routing, auth state, Axios interceptors, role-based guards, error boundaries, React Portals, and reusable real-world hooks in JavaScript. Run `npm test` to exercise the Vitest + RTL suite.
-12. `intersection-observer-js` - Step outside React to understand the native Intersection Observer API that powers infinite scroll, lazy loading, and scroll-animation patterns.
-13. `real-world-scenarios` - Apply TypeScript in practical UI workflows with validated forms (`react-hook-form` + `zod`).
-14. `advanced-redux-practice` - Work with async Redux Toolkit logic and server synchronization.
-15. `tanstack-query` - Shift to server-state management with caching, fetching, and CRUD workflows.
-16. `auth-practice` - Capstone full-stack flow combining auth, protected routes, and backend APIs.
+11. `advanced-ts-practice` - Go deeper on the type system itself: narrowing, inference, generics, utility and advanced types, `satisfies`, and declaration merging.
+12. `real-world-scenarios-js` - Combine routing, auth state, Axios interceptors, role-based guards, error boundaries, React Portals, and reusable real-world hooks in JavaScript. Run `npm test` to exercise the Vitest + RTL suite.
+13. `intersection-observer-js` - Step outside React to understand the native Intersection Observer API that powers infinite scroll, lazy loading, and scroll-animation patterns.
+14. `advanced-js-practice` - Drill the language and DOM fundamentals interviewers push on: `this` binding, promises and microtasks, concurrency control, retry/backoff, deep cloning, and event delegation.
+15. `real-world-scenarios` - Apply TypeScript in practical UI workflows with validated forms (`react-hook-form` + `zod`).
+16. `advanced-redux-practice` - Work with async Redux Toolkit logic and server synchronization.
+17. `tanstack-query` - Shift to server-state management with caching, fetching, and CRUD workflows.
+18. `auth-practice` - Capstone full-stack flow combining auth, protected routes, and backend APIs.
+
+`advanced-js-practice` and `advanced-ts-practice` are reference sheets rather than apps, so they can be
+read at any point in the path - they don't depend on the React projects around them.
 
 If you are short on time, a high-impact fast track is:
 `hooks-practice` -> `Context-API-Practice` -> `redux-practice` -> `router-practice` -> `real-world-scenarios-js` -> `tanstack-query` -> `auth-practice`.
@@ -58,7 +65,7 @@ npm install
 npm run dev
 ```
 
-For `create-react-app` based projects (`redux-practice`, `advanced-redux-practice`), use:
+For `create-react-app` based projects (`redux-practice`, `advanced-redux-practice`, and `auth-practice/frontend`), use:
 
 ```bash
 npm start
@@ -81,6 +88,24 @@ npm run lint        # ESLint check
 npm run stage       # staging build + preview
 ```
 
+`redux-basics` has no dev server - it is a single node script:
+
+```bash
+cd redux-basics
+npm install
+node redux-demo.js
+```
+
+For `auth-practice`, run the Express backend and the CRA frontend in separate terminals:
+
+```bash
+# Terminal 1
+cd auth-practice/backend && npm install && npm start
+
+# Terminal 2
+cd auth-practice/frontend && npm install && npm start
+```
+
 For `tanstack-query`, run both frontend and backend in separate terminals:
 
 ```bash
@@ -89,4 +114,20 @@ cd tanstack-query/backend && npm install && npm start
 
 # Terminal 2
 cd tanstack-query && npm install && npm run dev
+```
+
+For `advanced-js-practice`, the sheets are plain ESM files - run whichever one you are revising:
+
+```bash
+cd advanced-js-practice
+node src/promises.js          # or bind.js, concurrency-limiter.js, retry-with-backoff.js, deep-clone.js
+```
+
+Each file runs clean and fast because the demos are commented out; uncomment a block to see its
+output (every `// => value` in the sheets is real, verified output). The event sheet is a page
+instead, so open it in a browser - either directly, or through Vite:
+
+```bash
+cd advanced-js-practice && npm install && npm run dev
+# then open http://localhost:5173/src/event-delegation.html
 ```
