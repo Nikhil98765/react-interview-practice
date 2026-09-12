@@ -164,7 +164,7 @@ async function asyncPool(items, limit, worker) {
  ** Pool - limit runners
  ** pLimit - one run closure per task, limit comes from active
 */
-function pLimit(concurrency) {
+export function pLimit(concurrency) {
   if (!(Number.isInteger(concurrency) && concurrency > 0)) throw new TypeError('concurrency must be a positive integer'); // ⚠️ pLimit(0) hangs forever (§6.6)
 
   const queue = []; // contains runners for deferred tasks, once run function got resolved the returned promise to promise.all will be resolved.
