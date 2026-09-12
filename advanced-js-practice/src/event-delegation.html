@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Event delegation — interview revision sheet</title>
+  <style>
+    :root {
+      --bg: #fbfaf8; --fg: #1a1a1a; --muted: #5d5d5d; --line: #e2ded8;
+      --card: #ffffff; --code: #f4f2ee; --accent: #8c5a2b; --ok: #1f7a4d; --warn: #9a6400; --bad: #a33;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1b1a19; --fg: #ececec; --muted: #a3a3a3; --line: #343230;
+        --card: #232221; --code: #191817; --accent: #d9a066; --ok: #6dbf94; --warn: #d9ad5c; --bad: #e08b8b;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      padding: 24px 16px 340px;
+    }
+    main { max-width: 920px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 18px; margin: 36px 0 8px; padding-top: 14px; border-top: 1px solid var(--line); }
+    h3 { font-size: 15px; margin: 20px 0 6px; }
+    p, li { margin: 6px 0; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code); padding: 1px 4px; border-radius: 3px; font-size: 13px; }
+    pre { background: var(--code); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-size: 12.5px; line-height: 1.5; margin: 8px 0; }
+    pre code { background: none; padding: 0; }
+    .lede { color: var(--muted); }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin: 12px 0; }
+    .demo { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
+    button { font: inherit; font-size: 13px; padding: 5px 11px; border: 1px solid var(--line); background: var(--card); color: var(--fg); border-radius: 6px; cursor: pointer; }
+    button:hover:not(:disabled) { border-color: var(--accent); }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    ul.rows { list-style: none; padding: 0; margin: 8px 0; }
+    ul.rows li { display: flex; gap: 8px; align-items: center; padding: 4px 0; border-bottom: 1px dashed var(--line); }
+    ul.rows li span { flex: 1; }
+    .note { color: var(--muted); font-size: 13.5px; }
+    .yours { border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; margin: 10px 0; color: var(--fg); white-space: pre-wrap; font-size: 14px; }
+    .ok { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+    .tag { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; width: 100%; }
+    th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 5px 8px; }
+    details { margin: 6px 0; }
+    summary { cursor: pointer; font-weight: 600; }
+    .box { border: 2px dashed var(--line); padding: 14px; border-radius: 6px; }
+    .box .inner { border: 2px dashed var(--accent); padding: 10px; border-radius: 4px; }
+    #console {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 300px; background: var(--card);
+      border-top: 2px solid var(--accent); display: flex; flex-direction: column; z-index: 10;
+    }
+    #console header { display: flex; gap: 10px; align-items: center; padding: 6px 12px; border-bottom: 1px solid var(--line); font-size: 13px; }
+    #log { flex: 1; overflow-y: auto; padding: 6px 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+    #log .line { padding: 1px 0; border-bottom: 1px solid var(--line); }
+    #log .sep { color: var(--accent); font-weight: 700; padding-top: 6px; }
+    @media (max-width: 600px) { #console { height: 220px; } body { padding-bottom: 260px; } }
+  </style>
+</head>
+<body>
+<main>
+
+  <h1>Event bubbling, capturing &amp; delegation 🎯</h1>
+  <p class="lede">Interview revision sheet. Every demo on this page is live — click it and watch the
+    console pane at the bottom. Values marked ✅ were verified under jsdom 29; ❓ marks the one claim
+    that needs a real browser, which is now you.</p>
+
+  <div class="card">
+    <h3>THE MODEL 🧠</h3>
+    <p>A click doesn't "happen on the button". The browser builds the path from <code>window</code>
+      down to the target, then walks back up:</p>
+<pre><code>window → document → html → body → … → TARGET → … → body → document → window
+\________________ capture phase _____/  \______ bubble phase ______/</code></pre>
+    <p><code>addEventListener</code> listens on the <strong>bubble</strong> phase unless you pass
+      capture. A listener on a parent therefore sees every click from its subtree — that's
+      delegation, and it's why rows added later still work: nothing was ever bound to the row.</p>
+    <p>💡 <strong>The one-liner:</strong> delegation works because the event comes to the parent
+      anyway. One listener on a stable ancestor, plus <code>e.target.closest(selector)</code> to
+      find what was hit.</p>
+  </div>
+
+  <p class="yours">Your original note: A button click doesn't fire it on the button, event flows from window to the target (capture phase) and reaches the target and comes back up (bubble phase). addEventListener listens on the bubble phase by default. event delegation: put one event listener on the parent and it captures every child events.</p>
+
+  <!-- ===================================================================== -->
+  <h2>1. The three phases 🌊</h2>
+  <p>📝 Predict the log order before clicking. Note the capture listener is registered
+    <strong>last</strong> in the code.</p>
+
+  <div class="card">
+    <div id="outer" class="box">
+      outer
+      <div id="inner" class="inner">
+        inner
+        <div class="demo"><button id="btn">Click me</button></div>
+      </div>
+    </div>
+    <p class="note">✅ Verified order: <code>outer capture → button click → inner bubble → outer bubble</code></p>
+    <pre id="src-phases"><code></code></pre>
+    <p class="note">💡 Registration order doesn't matter <em>across</em> elements — phase and depth
+      decide. Two listeners on the <strong>same</strong> element in the same phase do run in
+      registration order.</p>
+  </div>
+
+  <!-- ===================================================================== -->
+  <h2>2. target vs currentTarget 🎯</h2>
+  <p>Click the text, then the buttons. <code>target</code> changes with what you hit;
+    <code>currentTarget</code> is always the element whose listener is running.</p>
+
+  <div class="card">
+    <ul class="rows" id="demo2-list">
+      <li data-id="7">
+        <span>Some text</span>
+        <button class="edit">Edit</button>
+        <button class="delete">Delete</button>
+      </li>
+    </ul>
+    <p class="note">✅ Clicking Delete: <code>target = &lt;button.delete&gt;</code>,
+      <code>currentTarget = &lt;li&gt;</code>, <code>closest('li').dataset.id = "7"</code></p>
+    <pre id="src-target"><code></code></pre>
+    <p class="note">⚠️ <code>currentTarget</code> is only valid <em>during</em> dispatch. Read it in
+      the handler — after an <code>await</code> or in a <code>setTimeout</code> it's
+      <code>null</code>.</p>
+    <p class="yours">Your note: target - actual target from which event got triggered, stays same. currentTarget - element on which event listener is attached to, changes as the event moves between handlers. If you want to get the li use closest — delegation work horse.</p>
+  </div>
+
+  <!-- ===================================================================== -->
+  <h2>3. Delegation 🧲</h2>
+  <p>One listener on the <code>&lt;ul&gt;</code>, for rows that don't exist yet. Add a few rows,
+    then delete them. Nothing is ever bound to a row.</p>
+
+  <div class="card">
+    <span class="tag">Exercise — add rows at runtime</span>
+    <div id="container">
+      <div class="demo"><button id="add-row">Add row</button></div>
+      <ul class="rows" id="items-list"></ul>
+    </div>
+    <p class="note">✅ Click a generated delete button and the log reads:
+      <code>container capture → target &lt;button.deleteBtn&gt; → currentTarget &lt;ul#items-list&gt; → delete operation</code>.
+      Click the row's text instead and the last line is absent — the span doesn't match.</p>
+    <pre id="src-exercise"><code></code></pre>
+  </div>
+
+  <div class="card">
+    <span class="tag">Two actions, one listener</span>
+    <ul class="rows" id="todo-list">
+      <li data-id="1"><span>Item 1</span><button class="edit">Edit</button><button class="delete">Delete</button></li>
+      <li data-id="2"><span>Item 2</span><button class="edit">Edit</button><button class="delete">Delete</button></li>
+      <li data-id="3"><span>Item 3</span><button class="edit">Edit</button><button class="delete">Delete</button></li>
+      <li data-id="4"><span>Item 4</span><button class="edit">Edit</button><button class="delete">Delete</button></li>
+    </ul>
+    <pre id="src-todo"><code></code></pre>
+    <p class="note">💡 <strong>The pattern, worth reciting:</strong> one listener on a stable
+      ancestor → <code>closest('li')</code> to find the row → early return when the click missed →
+      then match the action class.</p>
+  </div>
+
+  <!-- ===================================================================== -->
+  <h2>4. Listener options 🎛️</h2>
+
+  <div class="card">
+    <h3><code>{ once: true }</code> and <code>{ passive: true }</code></h3>
+    <div class="demo">
+      <a id="passive-link" href="https://google.com" target="_blank" rel="noreferrer">passive link (opens a tab)</a>
+      <a id="normal-link" href="https://google.com" target="_blank" rel="noreferrer">non-passive link (cancelled)</a>
+    </div>
+    <p class="note">✅ <code>once</code> runs the handler exactly one time however many times you
+      click. ⚠️ <code>passive: true</code> makes <code>preventDefault()</code> a
+      <strong>no-op</strong>: <code>defaultPrevented</code> stays <code>false</code> and the browser
+      navigates anyway (Chrome also logs "Unable to preventDefault inside passive event listener
+      invocation"). The second link is identical minus <code>passive</code>, and it <em>is</em>
+      cancelled. <code>passive</code> is a promise you make to the browser so it can scroll without
+      waiting for you — use it for scroll/touch/wheel, never with <code>preventDefault</code>.</p>
+    <pre id="src-options"><code></code></pre>
+  </div>
+
+  <div class="card">
+    <h3><code>{ signal }</code> — drop many listeners at once</h3>
+    <div class="demo">
+      <button id="signal-btn">Signal listener</button>
+      <button id="abort">Abort</button>
+      <span class="note">fired: <strong id="signal-count">0</strong></span>
+    </div>
+    <p class="note">✅ Fires until Abort, then never again (verified: 1 call, then 0).
+      ⚠️ <code>removeEventListener</code> needs the identical function reference <em>and</em> a
+      matching capture flag — an inline arrow can never be removed. That's why
+      <code>signal</code> is the modern answer, and it's the same primitive as
+      <code>fetch</code> cancellation.</p>
+    <pre id="src-signal"><code></code></pre>
+  </div>
+
+  <!-- ===================================================================== -->
+  <h2>5. Gotchas ⚠️</h2>
+
+  <div class="card">
+    <h3>5.1 HTML comments do not nest — the bug that was in this file</h3>
+    <p>The <strong>first</strong> end marker wins: an inner one closes the outer comment. A block
+      here opened with the todo-list markup and was closed by the end marker of an "Exercise"
+      comment two lines down, so everything after it went <strong>live</strong> — four rows, the
+      Abort button, a link, and a stray end marker printed as page text. The rows also lost their
+      list wrapper and were parented to <code>BODY</code>, so the <code>#items-list</code> listener
+      never saw them: clicking Delete logged nothing, which looks exactly like "delegation is
+      broken". ✅ Verified with a spec-compliant parser — and hit again while writing the note about
+      it, because quoting the marker inside a comment closes that comment too.</p>
+    <p class="note">✅ Fix: one wrapper, no inner end marker. To park markup tidily use a
+      <code>&lt;template&gt;</code> element or <code>&lt;script type="text/plain"&gt;</code>
+      instead of commenting it out. (This sheet sidesteps the whole problem: the notes are page
+      content now, not comments.)</p>
+  </div>
+
+  <div class="card">
+    <h3>5.2 preventDefault vs stopPropagation vs stopImmediatePropagation</h3>
+    <p class="yours">Your note:
+1. preventDefault - to prevent browser's default action.
+2. stopPropagation - prevents event traveling further up or down
+3. stopImmediatePropagation - stopPropagation + prevents propagating event to other event listeners on same element
+return false to avoid event bubbling and prevent browser default actions, does work only in old style inline handlers but not with addEventListener method.</p>
+    <div class="demo">
+      <button id="stop-prop">stopPropagation</button>
+      <button id="stop-immediate">stopImmediatePropagation</button>
+      <button id="return-false">return false</button>
+    </div>
+    <p class="note">✅ All three verified. <code>stopPropagation</code> → own handlers 1 and 2 both
+      run, the parent doesn't. <code>stopImmediatePropagation</code> → handler 1 only.
+      <code>return false</code> → the parent still saw the event and
+      <code>defaultPrevented</code> stayed <code>false</code>: ignored, exactly as you wrote.</p>
+    <p class="note">💡 They're independent: <code>preventDefault</code> stops the
+      <strong>browser</strong>, <code>stopPropagation</code> stops the <strong>travel</strong>.
+      ⚠️ <code>stopPropagation</code> inside a delegated handler is a trap — the event may never
+      reach an ancestor that analytics or an outside-click handler depends on.</p>
+    <pre id="src-stop"><code></code></pre>
+  </div>
+
+  <div class="card">
+    <h3>5.3 Not all events bubble</h3>
+    <p>Focus the input, then click away. The listeners are all on the <em>parent</em>.</p>
+    <div class="demo box" id="focus-wrap">
+      <input id="focus-input" placeholder="focus me">
+      <input placeholder="then me">
+    </div>
+    <p class="note">✅ Verified with a real <code>focus()</code>: the parent saw
+      <code>focusin (bubbles=true)</code> and <code>focusout (bubbles=true)</code>, and
+      <strong>never</strong> <code>focus</code> or <code>blur</code>.</p>
+    <table>
+      <tr><th>Bubbles</th><th>Doesn't bubble</th><th>Use instead</th></tr>
+      <tr><td>click, change, submit</td><td>focus</td><td>focusin</td></tr>
+      <tr><td>focusin, focusout</td><td>blur</td><td>focusout</td></tr>
+      <tr><td>mouseover, mouseout</td><td>mouseenter</td><td>mouseover + relatedTarget guard</td></tr>
+      <tr><td>input, keydown</td><td>mouseleave</td><td>mouseout + relatedTarget guard</td></tr>
+      <tr><td></td><td>scroll (on an element)</td><td>capture phase</td></tr>
+    </table>
+    <p class="note">💡 Two ways out: the bubbling twin, or the <em>same</em> event in the capture
+      phase — capture reaches the parent even for non-bubbling events.</p>
+  </div>
+
+  <div class="card">
+    <h3>5.4 mouseover/mouseout fire constantly</h3>
+    <p class="yours">Your note: since mouseover/mouseout bubbles up it fires for every child boundary crossing inside the element. either use mouseenter / mouseleave which don't bubble up or guard with e.relatedTarget</p>
+    <p>Sweep the pointer across the boxes and compare the counters:</p>
+    <div class="demo box" id="hover-box">
+      hover area
+      <div class="inner">child A</div>
+      <div class="inner">child B</div>
+    </div>
+    <p class="note">mouseover: <strong id="over-count">0</strong> ·
+      mouseenter: <strong id="enter-count">0</strong> ·
+      guarded mouseover: <strong id="guard-count">0</strong></p>
+    <pre id="src-hover"><code></code></pre>
+    <p class="note">💡 <code>relatedTarget</code> is where the pointer came from (mouseover) or went
+      to (mouseout), and it's <code>null</code> when entering from outside the window.</p>
+  </div>
+
+  <div class="card">
+    <h3>5.5 ❓ Disabled buttons swallow clicks — <span class="warn">you can settle this one</span></h3>
+    <p class="yours">Your note: clicks on any disabled element fires no click event at all, so nothing bubbles and attached handler won't triggered. If you need to detect clicks on disabled buttons then wrap them or have pointer-events: none in styling</p>
+    <p>Click both. If the disabled one logs nothing while the wrapped one logs, your note is
+      confirmed <em>in this browser</em>.</p>
+    <div class="demo">
+      <button id="disabled-btn" disabled>Disabled button</button>
+      <span id="disabled-wrap" class="box" style="padding:6px 10px"><button disabled>Disabled, wrapped</button></span>
+    </div>
+    <p class="note">❓ This is the one claim jsdom would <strong>not</strong> confirm — it dispatched
+      the click anyway. The HTML spec backs you up: a disabled form control must prevent queued
+      click events from being dispatched. It applies to <code>button</code>, <code>input</code>,
+      <code>select</code>, <code>textarea</code>, <code>fieldset</code> — not to a disabled-looking
+      <code>&lt;div&gt;</code>.</p>
+    <p class="note">💡 For delegation: a disabled row button produces <em>nothing</em> for the
+      parent to delegate, so "nothing happened" is the expected outcome, not a missing handler.</p>
+  </div>
+
+  <div class="card">
+    <h3>5.6 e.target is whatever was under the cursor</h3>
+    <p>Click the row text and <code>target</code> is the <code>&lt;span&gt;</code>; click an icon
+      and it's the <code>&lt;svg&gt;</code>. ✅ Verified in §3: clicking row text logs target and
+      currentTarget but never <code>delete operation</code>.</p>
+<pre><code>const row = e.target.closest('li');
+if (!row) return;                          // the guard that makes delegation safe
+if (e.target.closest('.delete')) del(row.dataset.id);</code></pre>
+    <p class="note">Never <code>e.target === btn</code> or
+      <code>e.target.classList.contains(...)</code> — both break the moment there's a child element
+      inside the button.</p>
+  </div>
+
+  <div class="card">
+    <h3>5.7 Delegate to a container that outlives the rows</h3>
+    <p>The listener is on the <code>&lt;ul&gt;</code>; rows come and go. Re-render the container
+      itself (<code>innerHTML = …</code>) and the listener dies with it — bind to a parent you never
+      replace. 💡 <code>document</code> is the fallback but the loudest possible scope: every click
+      in the page runs your handler. Prefer the nearest stable ancestor.</p>
+  </div>
+
+  <div class="card">
+    <h3>5.8 Capture order beats registration order</h3>
+    <p>✅ Verified in §1: the capture listener was registered <em>last</em> and ran <em>first</em>.
+      Same element, same phase → registration order decides.</p>
+  </div>
+
+  <div class="card">
+    <h3>5.9 Delegation changes when a handler runs, not whether it can be slow</h3>
+    <p>One listener for 500 rows saves memory and setup, but it now runs for every click in the
+      subtree. Keep it cheap: match, then hand off to a function. No layout reads
+      (<code>offsetHeight</code>, <code>getBoundingClientRect</code>) inline.</p>
+  </div>
+
+  <div class="card">
+    <h3>5.10 Nested retries of the DOM kind: two listeners, one intent</h3>
+    <p>A delegated parent handler plus a direct row handler both fire for the same click, in
+      bubble order (row first, parent second). If both mutate state you get double deletes. Pick one
+      layer — the same rule as retry layers in <code>retry-with-backoff.js</code>.</p>
+  </div>
+
+  <!-- ===================================================================== -->
+  <h2>6. Why this matters for React ⚛️</h2>
+  <p class="yours">Your note: React attaches one listener per each event type at root container element. The onClick in react code is not the actual DOM events but instead they were synthetic events tied to react synthetic tree. on click on any element react catches the native event at root and replays it through its synthetic tree.
+
+1. synthetic events bubbling mechanism don't follow DOM tree instead it follow react synthetic tree. A modal using portal can be rendered at any other section in DOM tree but events still bubble up to the react parent that rendered it. will be a surprise on modal debugging.
+2. stopPropagation: event.stopPropagation in react code stops the event bubbling for synthetic events but not for native event. native event would have already reached root, if any listeners were attached to parent via addEventListener method would still fire.
+3. React onClick doesn't attach 500 listeners to 500 rows. Its a delegation under hood - do we need to do the delegation because we attach 500 listeners but not react already does it under hood</p>
+  <p>💡 <strong>Answer to your question in (3):</strong> no. In React you don't hand-roll delegation
+    for 500 rows — <code>onClick</code> per row is already delegated, and a per-row closure is the
+    idiomatic, type-safe way to pass the row id. Hand-rolled delegation in React is for the rare
+    case of a huge list where you also want to avoid 500 closures.</p>
+  <p>⚠️ One version detail worth naming: React 17+ attaches at the <strong>root container</strong>;
+    React 16 attached at <code>document</code>. Mixing a React 16 app with your own
+    document-level listener is where the ordering surprises came from.</p>
+
+  <!-- ===================================================================== -->
+  <h2>7. When NOT to use delegation ❌</h2>
+  <p class="yours">Your note:
+1. single element with single handler - delegation adds indirection for nothing
+2. event doesn't bubble and capture workaround is confusing with N listeners.
+3. You need stopPropagation semantics between siblings, which delegation wont allow that.</p>
+  <p>4. The container is re-rendered wholesale, so the listener keeps dying (§5.7).</p>
+
+  <!-- ===================================================================== -->
+  <h2>8. Interview Q&amp;A 🎤</h2>
+
+  <details><summary>Q1. Walk me through what happens when I click a button.</summary>
+    <p>The browser computes the path <code>window → … → target</code>, runs capture listeners on the
+      way down, then the target's, then bubble listeners on the way back up.
+      <code>addEventListener</code> is bubble-phase unless you pass capture. (§1)</p></details>
+
+  <details><summary>Q2. Order of logs for outer-capture, inner-bubble, target, outer-bubble?</summary>
+    <p><code>outer capture → button click → inner bubble → outer bubble</code> — and the capture
+      listener was registered last. (§1, §5.8)</p></details>
+
+  <details><summary>Q3. target vs currentTarget?</summary>
+    <p><code>target</code> is what was hit and never changes during dispatch;
+      <code>currentTarget</code> is the element whose listener is running, so it differs per handler.
+      Valid only during dispatch. (§2)</p></details>
+
+  <details><summary>Q4. What is delegation, and why does it work for rows added later?</summary>
+    <p>One listener on a stable ancestor. The event reaches the ancestor regardless, so nothing needs
+      binding per row. Verified: a row created after bind still triggers it. (§3)</p></details>
+
+  <details><summary>Q5. Why closest() instead of comparing e.target?</summary>
+    <p>The click may land on a span or an icon inside the button. <code>closest()</code> walks up
+      from the target to the first match, and clicking dead space must produce no action. (§5.6)</p></details>
+
+  <details><summary>Q6. preventDefault vs stopPropagation vs stopImmediatePropagation?</summary>
+    <p>Stop the browser's default action; stop travel through the tree; stop travel <em>and</em> the
+      remaining listeners on the same element. (§5.2)</p></details>
+
+  <details><summary>Q7. Does <code>return false</code> work?</summary>
+    <p>Only in old inline handlers. In an <code>addEventListener</code> callback it's ignored: the
+      event still bubbled and <code>defaultPrevented</code> stayed false. (§5.2)</p></details>
+
+  <details><summary>Q8. Which events don't bubble, and what do you do about it?</summary>
+    <p><code>focus</code>, <code>blur</code>, <code>mouseenter</code>, <code>mouseleave</code>,
+      element <code>scroll</code>. Use the bubbling twin, or listen in the capture phase. (§5.3)</p></details>
+
+  <details><summary>Q9. Why didn't my delegated handler fire for a disabled button?</summary>
+    <p>A disabled form control dispatches no click at all, so there's nothing to delegate. (§5.5)</p></details>
+
+  <details><summary>Q10. How do you remove many listeners cleanly?</summary>
+    <p>One <code>AbortController</code>: pass <code>{ signal }</code> to each
+      <code>addEventListener</code> and abort once. <code>removeEventListener</code> would need the
+      identical function reference and capture flag. (§4)</p></details>
+
+  <details><summary>Q11. React: I called stopPropagation in onClick — why did my document listener still run?</summary>
+    <p>React listens at the root container, so the native event already travelled there before your
+      synthetic handler ran. Synthetic propagation follows the React tree, which is also why portals
+      bubble to the React parent rather than the DOM parent. (§6)</p></details>
+
+  <p class="note" style="margin-top:28px">👉 NEXT: no file yet. Natural follow-ups — debounce/throttle
+    (the other half of handling noisy events like scroll, input and mouseover) and
+    AbortController/cancellation, which also closes <code>retry-with-backoff.js</code> §4.2.</p>
+
+</main>
+
+<div id="console">
+  <header>
+    <strong>console</strong>
+    <span class="note">click the demos above · also mirrored to devtools</span>
+    <button id="clear-log" style="margin-left:auto">Clear</button>
+  </header>
+  <div id="log"></div>
+</div>
+
+<script>
+  // ── tiny on-page console ────────────────────────────────────────────────
+  const logEl = document.querySelector('#log');
+  const fmt = (x) => {
+    if (x instanceof Element) return `<${x.tagName.toLowerCase()}${x.id ? '#' + x.id : ''}${x.className && typeof x.className === 'string' ? '.' + x.className.trim().split(/\s+/).join('.') : ''}>`;
+    if (x === null) return 'null';
+    if (typeof x === 'object') return JSON.stringify(x);
+    return String(x);
+  };
+  function log(...args) {
+    console.log(...args);
+    const line = document.createElement('div');
+    line.className = 'line';
+    line.textContent = args.map(fmt).join(' ');
+    logEl.prepend(line);
+  }
+  function mark(text) {
+    const line = document.createElement('div');
+    line.className = 'line sep';
+    line.textContent = '— ' + text;
+    logEl.prepend(line);
+  }
+  document.querySelector('#clear-log').addEventListener('click', () => { logEl.textContent = ''; });
+
+  // Show the REAL source of each demo, so the code on the page can never drift from
+  // the code that runs. (fn.toString() + a dedent.)
+  function showSource(selector, fn) {
+    const body = fn.toString().replace(/^[^{]*\{\s*\n?/, '').replace(/\}\s*$/, '');
+    const indent = Math.min(...body.split('\n').filter(l => l.trim()).map(l => l.match(/^ */)[0].length));
+    document.querySelector(selector).firstElementChild.textContent =
+      body.split('\n').map(l => l.slice(indent)).join('\n').trim();
+  }
+
+  // ── 1. the three phases ─────────────────────────────────────────────────
+  function phases() {
+    const outer = document.querySelector('#outer');
+    const inner = document.querySelector('#inner');
+    const button = document.querySelector('#btn');
+
+    outer.addEventListener('click', () => log('🚀 outer bubble'));
+    inner.addEventListener('click', () => log('🚀 inner bubble'));
+    button.addEventListener('click', () => log('🚀 button click'));
+    outer.addEventListener('click', () => log('🚀 outer capture'), true); // registered LAST, runs FIRST
+  }
+
+  // ── 2. target vs currentTarget ──────────────────────────────────────────
+  function targetVsCurrentTarget() {
+    document.querySelector('#demo2-list li').addEventListener('click', (e) => {
+      mark('§2 click');
+      log('e.target:', e.target);               // what was hit — stays the same
+      log('e.currentTarget:', e.currentTarget); // where the listener lives
+      log("e.target.closest('li').dataset.id:", e.target.closest('li').dataset.id);
+    });
+  }
+
+  // ── 3. delegation: the exercise (your code) ─────────────────────────────
+  function exercise() {
+    let n = 0;
+    document.querySelector('#add-row').addEventListener('click', () => {
+      const span = document.createElement('span');
+      const id = ++n;                       // a counter reads better than Math.random()
+      span.textContent = `item ${id}`;
+      const deleteBtn = document.createElement('button');
+      deleteBtn.classList.add('deleteBtn');
+      deleteBtn.textContent = 'delete';
+      const liEle = document.createElement('li');
+      liEle.setAttribute('data-id', id);
+      liEle.append(span, deleteBtn);
+      document.querySelector('#items-list').appendChild(liEle);
+      log(`➕ row ${id} added (nothing bound to it)`);
+    });
+
+    // ONE listener, for rows that didn't exist when it was attached
+    document.querySelector('#items-list').addEventListener('click', (e) => {
+      mark('§3 click');
+      log('e.target:', e.target);
+      log('e.currentTarget:', e.currentTarget);
+      if (e.target.closest('.deleteBtn')) {         // closest, not ===
+        const row = e.target.closest('li');
+        log(`🗑️ delete operation on id ${row.dataset.id}`);
+        row.remove();
+      }
+    });
+
+    // capture fires on the way DOWN, so this logs before the handler above
+    document.querySelector('#container')
+      .addEventListener('click', () => log('⬇️ container capture'), { capture: true });
+  }
+
+  // ── 3b. two actions, one listener (your delegation code) ────────────────
+  function todoDelegation() {
+    document.querySelector('#todo-list').addEventListener('click', (e) => {
+      const listElement = e.target.closest('li');
+      if (!listElement) return;                     // the guard: click missed a row
+
+      if (e.target.closest('.delete')) deleteEle(listElement.dataset.id);
+      if (e.target.closest('.edit')) editEle(listElement.dataset.id);
+    });
+
+    const deleteEle = (id) => log(`🚀 delete id: ${id}`);
+    const editEle = (id) => log(`🚀 edit id: ${id}`);
+  }
+
+  // ── 4. once + passive ───────────────────────────────────────────────────
+  function options() {
+    document.querySelector('#passive-link').addEventListener('click', (e) => {
+      e.preventDefault();                          // ⚠️ ignored: the listener is passive
+      log('🤖 passive link handler ran once · defaultPrevented =', e.defaultPrevented);
+    }, { once: true, passive: true });
+
+    document.querySelector('#normal-link').addEventListener('click', (e) => {
+      e.preventDefault();                          // ✅ honoured: no navigation
+      log('🤖 non-passive link · defaultPrevented =', e.defaultPrevented);
+    });
+  }
+
+  // ── 4b. one signal, many listeners ──────────────────────────────────────
+  function signals() {
+    const ac = new AbortController();
+    let fired = 0;
+    document.querySelector('#signal-btn').addEventListener('click', () => {
+      document.querySelector('#signal-count').textContent = ++fired;
+      log(`🚀 signal listener fired (${fired})`);
+    }, { signal: ac.signal });
+
+    document.querySelector('#abort').addEventListener('click', () => {
+      ac.abort();
+      log('🛑 aborted — that listener is gone for good');
+    });
+  }
+
+  // ── 5.2 stop* and return false ──────────────────────────────────────────
+  function stopping() {
+    const wrap = document.querySelector('#stop-prop').parentElement;
+    wrap.addEventListener('click', (e) => log('👆 parent saw:', e.target));
+
+    const sp = document.querySelector('#stop-prop');
+    sp.addEventListener('click', (e) => { mark('stopPropagation'); log('h1'); e.stopPropagation(); });
+    sp.addEventListener('click', () => log('h2 (same element — still runs)'));
+
+    const si = document.querySelector('#stop-immediate');
+    si.addEventListener('click', (e) => { mark('stopImmediatePropagation'); log('h1'); e.stopImmediatePropagation(); });
+    si.addEventListener('click', () => log('h2 — you will NOT see this'));
+
+    document.querySelector('#return-false').addEventListener('click', (e) => {
+      mark('return false');
+      log('handler returned false · defaultPrevented =', e.defaultPrevented, '· parent still sees it');
+      return false;                                // ❌ no effect with addEventListener
+    });
+  }
+
+  // ── 5.3 focus/blur don't bubble, focusin/focusout do ────────────────────
+  function focusBubbling() {
+    const wrap = document.querySelector('#focus-wrap');
+    for (const type of ['focus', 'blur', 'focusin', 'focusout']) {
+      wrap.addEventListener(type, (e) => log(`parent saw ${type} (bubbles=${e.bubbles})`));
+    }
+  }
+
+  // ── 5.4 mouseover storm vs mouseenter ───────────────────────────────────
+  function hover() {
+    const box = document.querySelector('#hover-box');
+    let over = 0, enter = 0, guarded = 0;
+    box.addEventListener('mouseover', () => {
+      document.querySelector('#over-count').textContent = ++over;
+    });
+    box.addEventListener('mouseenter', () => {
+      document.querySelector('#enter-count').textContent = ++enter;
+    });
+    box.addEventListener('mouseover', (e) => {
+      if (box.contains(e.relatedTarget)) return;   // moved WITHIN the box, not into it
+      document.querySelector('#guard-count').textContent = ++guarded;
+    });
+  }
+
+  // ── 5.5 disabled buttons ────────────────────────────────────────────────
+  function disabledClicks() {
+    document.querySelector('#disabled-btn').addEventListener('click', () => log('❓ disabled button handler RAN'));
+    document.body.addEventListener('click', (e) => {
+      if (e.target.id === 'disabled-btn') log('❓ a click from the disabled button reached body');
+    });
+    document.querySelector('#disabled-wrap').addEventListener('click', () => log('✅ wrapper caught the click (workaround)'));
+  }
+
+  phases();
+  targetVsCurrentTarget();
+  exercise();
+  todoDelegation();
+  options();
+  signals();
+  stopping();
+  focusBubbling();
+  hover();
+  disabledClicks();
+
+  showSource('#src-phases', phases);
+  showSource('#src-target', targetVsCurrentTarget);
+  showSource('#src-exercise', exercise);
+  showSource('#src-todo', todoDelegation);
+  showSource('#src-options', options);
+  showSource('#src-signal', signals);
+  showSource('#src-stop', stopping);
+  showSource('#src-hover', hover);
+
+  log('page ready — click anything above');
+</script>
+</body>
+</html>
