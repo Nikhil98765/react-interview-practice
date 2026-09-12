@@ -100,6 +100,9 @@ const p = new Promise((resolve, reject) => {
 // ⚠️ A chained .then costs one FULL tick per link. That's why `.then` chains interleave with
 //    other microtasks instead of running as one block.
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 3. CHAINING & ERROR PROPAGATION 🔗
+// ─────────────────────────────────────────────────────────────────────────────
 /**
   ** 3. Chaining and Error propagation
     .catch and .then both return promises and every link can transform or recover.
@@ -188,6 +191,9 @@ const fResult = await Promise.resolve(45)
 // 💡 finally is for cleanup precisely because it runs on BOTH paths. That's also why throwing
 //    in it is so dangerous: it converts a success into a failure from a "cleanup" block.
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. FLATTENING 🫓
+// ─────────────────────────────────────────────────────────────────────────────
 /*
   5. Returning a promise from .then FLATTENS it — no nesting, ever.
      `.then(v => somePromise)` waits for somePromise and passes its VALUE on,
@@ -280,7 +286,7 @@ const bad = (err, ms = 10) =>
         order isn't input order.
      3. Handle the empty-input case FIRST; the loop can't settle a promise it never enters. */
 
-// * 5.1 - all
+// * 7.1 - all
 Promise.myAll = (promisesArr) => {
   // store output array if every promise is fulfilled and maintain input order
   // If any of the promise rejects, first reject error should be returned.
@@ -344,7 +350,7 @@ Promise.myAll = (promisesArr) => {
 // const a16 = await Promise.myAll(new Set([1, 2]));
 // console.log("🚀 ~ a16:", a16)    // => [1, 2] ✅ [...x] means ANY iterable works, like native
 
-// * 5.2 - allSettled
+// * 7.2 - allSettled
 Promise.myAllSettled = (promisesArr) => {
   return new Promise((res, rej) => {
     const inputArr = [...promisesArr];
@@ -398,7 +404,7 @@ Promise.myAllSettled1 = (promiseArr) => {
 // const b23 = await Promise.myAllSettled1([]);
 // const b25 = await Promise.myAllSettled1(new Set([1, 2, 3]))
 
-// * 5.3 - race
+// * 7.3 - race
 Promise.myRace = (promiseArr) => {
   return new Promise((res, rej) => {
     // const inputArr = [...promiseArr];
@@ -422,7 +428,7 @@ Promise.myRace = (promiseArr) => {
 // const c13 = await Promise.myRace([]);                           // => ⚠️ hangs ✅ (matches native)
 // const c14 = await Promise.myRace(new Set([201, 2]));            // => 201 ✅
 
-// * 5.4 - any
+// * 7.4 - any
 Promise.myAny = (promiseArr) => {
   return new Promise((res, rej) => {
     const inputArr = [...promiseArr];
@@ -487,6 +493,8 @@ const delay = (ms, val) => new Promise((res) => setTimeout(() => res(val), ms));
 // const end1 = performance.now();
 // console.log(`2nd block Execution time: ${end1 - start1} ms`);
 // console.log("🚀 ~ results1:", results1)
+// => ~3.9ms serial vs ~1.5ms parallel — small, because fetchOne's setTimeout has NO delay.
+//    Give it `id * 10` to see the real shape: 156ms (the SUM) vs 52ms (the MAX).
 // 💡 Only await inside a loop when an iteration genuinely NEEDS the previous one's value.
 //    Otherwise it's N × latency instead of 1 × latency.
 
@@ -533,8 +541,8 @@ const delay = (ms, val) => new Promise((res) => setTimeout(() => res(val), ms));
 //    setTimeout returns a Timeout OBJECT immediately, so that's an already-resolved promise
 //    and it wins the race at 0ms with a Timeout object. Verified. Use the `delay` helper above.
 //
-// Same for all(): a rejection settles the chain at once, but the slow sibling keeps going —
-// verified, its side effect landed 35ms AFTER Promise.all had already rejected.
+// Same for all(): a rejection settles the chain at once, but the slow sibling keeps going.
+// => 10ms reject + 50ms sibling: all() rejects at 12ms, the sibling's side effect lands at 52ms.
 // ✅ FIX: AbortController, and pass its signal into the work itself. Nothing else cancels.
 
 /* ---- 8.6 ⚠️ Branching is not chaining -------------------------------------- */
@@ -556,12 +564,14 @@ const delay = (ms, val) => new Promise((res) => setTimeout(() => res(val), ms));
 //    inside. This is the one place `return await` is not redundant.
 
 /* ---- 8.8 ⚠️ A late .catch is too late -------------------------------------- */
+// process.on('unhandledRejection', (e) => console.log('unhandledRejection:', e.message));  // ⚠️ REQUIRED, see below
 // const late = Promise.reject(new Error('rejected now'));
 // setTimeout(() => late.catch(e => console.log('handled at last:', e.message)), 10);
-// => 'unhandledRejection' FIRES FIRST ✅ verified, then the catch runs and node warns
+// => unhandledRejection fires FIRST, then the catch, then node warns
 //    "PromiseRejectionHandledWarning: Promise rejection was handled asynchronously".
-// ⚠️ In Node an unhandled rejection is FATAL — the process exits non-zero and pending timers
-//    never run. Verified. Attach handlers in the same tick you create the promise.
+// ⚠️ WITHOUT that listener the default is FATAL: node dies at once (exit 1), the 10ms timer
+//    never fires, so the .catch never runs at all. Both outcomes verified.
+// 💡 Attach handlers in the same tick you create the promise.
 
 /* ---- 8.9 ⚠️ async callbacks swallow errors into unhandled rejections ------- */
 // [1].forEach(async () => { throw new Error('lost inside forEach'); });
