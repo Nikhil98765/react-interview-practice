@@ -45,7 +45,7 @@
 
    THE TRUST BOUNDARY ⚠️
      Merging is an ASSERTION THE COMPILER TRUSTS, never verifies. `interface Widget { render(): string }`
-     next to `class Widget {}` makes `w.render()` compile and crash at runtime (§6).
+     next to `class Widget {}` makes `w.render()` compile and crash at runtime (section 6).
      Contrast `implements`: a REQUEST THE COMPILER VERIFIES.
        Merge = "trust me, it's there."   implements = "prove it's there."
    ============================================================================ */
@@ -240,13 +240,13 @@ export interface Session {
 /**
   ** What merges with what
       Combination                             Result
-      interface + interface             merged members; methods stack as overloads (§3)
-      interface + class                 members added to the INSTANCE type (not to the class itself) ⚠️ §6
+      interface + interface             merged members; methods stack as overloads (section 3)
+      interface + class                 members added to the INSTANCE type (not to the class itself) ⚠️ section 6
       interface + namespace             type side + value side
       namespace + namespace             merges exported members
       namespace + function / class      exported members become statics; namespace must come AFTER
       namespace + enum                  statics; order is free
-      enum + enum                       members merged ⚠️ §7
+      enum + enum                       members merged ⚠️ section 7
       type + type                       ❌ TS2300 duplicate identifier
       type + interface                  ❌ TS2300 duplicate identifier
       class + class                     ❌ TS2300 duplicate identifier

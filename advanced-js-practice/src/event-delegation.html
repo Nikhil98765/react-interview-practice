@@ -291,7 +291,7 @@ return false to avoid event bubbling and prevent browser default actions, does w
   <div class="card">
     <h3>5.6 e.target is whatever was under the cursor</h3>
     <p>Click the row text and <code>target</code> is the <code>&lt;span&gt;</code>; click an icon
-      and it's the <code>&lt;svg&gt;</code>. ✅ Verified in §3: clicking row text logs target and
+      and it's the <code>&lt;svg&gt;</code>. ✅ Verified in section 3: clicking row text logs target and
       currentTarget but never <code>delete operation</code>.</p>
 <pre><code>const row = e.target.closest('li');
 if (!row) return;                          // the guard that makes delegation safe
@@ -311,7 +311,7 @@ if (e.target.closest('.delete')) del(row.dataset.id);</code></pre>
 
   <div class="card">
     <h3>5.8 Capture order beats registration order</h3>
-    <p>✅ Verified in §1: the capture listener was registered <em>last</em> and ran <em>first</em>.
+    <p>✅ Verified in section 1: the capture listener was registered <em>last</em> and ran <em>first</em>.
       Same element, same phase → registration order decides.</p>
   </div>
 
@@ -350,7 +350,7 @@ if (e.target.closest('.delete')) del(row.dataset.id);</code></pre>
 1. single element with single handler - delegation adds indirection for nothing
 2. event doesn't bubble and capture workaround is confusing with N listeners.
 3. You need stopPropagation semantics between siblings, which delegation wont allow that.</p>
-  <p>4. The container is re-rendered wholesale, so the listener keeps dying (§5.7).</p>
+  <p>4. The container is re-rendered wholesale, so the listener keeps dying (section 5.7).</p>
 
   <!-- ===================================================================== -->
   <h2>8. Interview Q&amp;A 🎤</h2>
@@ -358,53 +358,53 @@ if (e.target.closest('.delete')) del(row.dataset.id);</code></pre>
   <details><summary>Q1. Walk me through what happens when I click a button.</summary>
     <p>The browser computes the path <code>window → … → target</code>, runs capture listeners on the
       way down, then the target's, then bubble listeners on the way back up.
-      <code>addEventListener</code> is bubble-phase unless you pass capture. (§1)</p></details>
+      <code>addEventListener</code> is bubble-phase unless you pass capture. (section 1)</p></details>
 
   <details><summary>Q2. Order of logs for outer-capture, inner-bubble, target, outer-bubble?</summary>
     <p><code>outer capture → button click → inner bubble → outer bubble</code> — and the capture
-      listener was registered last. (§1, §5.8)</p></details>
+      listener was registered last. (section 1, section 5.8)</p></details>
 
   <details><summary>Q3. target vs currentTarget?</summary>
     <p><code>target</code> is what was hit and never changes during dispatch;
       <code>currentTarget</code> is the element whose listener is running, so it differs per handler.
-      Valid only during dispatch. (§2)</p></details>
+      Valid only during dispatch. (section 2)</p></details>
 
   <details><summary>Q4. What is delegation, and why does it work for rows added later?</summary>
     <p>One listener on a stable ancestor. The event reaches the ancestor regardless, so nothing needs
-      binding per row. Verified: a row created after bind still triggers it. (§3)</p></details>
+      binding per row. Verified: a row created after bind still triggers it. (section 3)</p></details>
 
   <details><summary>Q5. Why closest() instead of comparing e.target?</summary>
     <p>The click may land on a span or an icon inside the button. <code>closest()</code> walks up
-      from the target to the first match, and clicking dead space must produce no action. (§5.6)</p></details>
+      from the target to the first match, and clicking dead space must produce no action. (section 5.6)</p></details>
 
   <details><summary>Q6. preventDefault vs stopPropagation vs stopImmediatePropagation?</summary>
     <p>Stop the browser's default action; stop travel through the tree; stop travel <em>and</em> the
-      remaining listeners on the same element. (§5.2)</p></details>
+      remaining listeners on the same element. (section 5.2)</p></details>
 
   <details><summary>Q7. Does <code>return false</code> work?</summary>
     <p>Only in old inline handlers. In an <code>addEventListener</code> callback it's ignored: the
-      event still bubbled and <code>defaultPrevented</code> stayed false. (§5.2)</p></details>
+      event still bubbled and <code>defaultPrevented</code> stayed false. (section 5.2)</p></details>
 
   <details><summary>Q8. Which events don't bubble, and what do you do about it?</summary>
     <p><code>focus</code>, <code>blur</code>, <code>mouseenter</code>, <code>mouseleave</code>,
-      element <code>scroll</code>. Use the bubbling twin, or listen in the capture phase. (§5.3)</p></details>
+      element <code>scroll</code>. Use the bubbling twin, or listen in the capture phase. (section 5.3)</p></details>
 
   <details><summary>Q9. Why didn't my delegated handler fire for a disabled button?</summary>
-    <p>A disabled form control dispatches no click at all, so there's nothing to delegate. (§5.5)</p></details>
+    <p>A disabled form control dispatches no click at all, so there's nothing to delegate. (section 5.5)</p></details>
 
   <details><summary>Q10. How do you remove many listeners cleanly?</summary>
     <p>One <code>AbortController</code>: pass <code>{ signal }</code> to each
       <code>addEventListener</code> and abort once. <code>removeEventListener</code> would need the
-      identical function reference and capture flag. (§4)</p></details>
+      identical function reference and capture flag. (section 4)</p></details>
 
   <details><summary>Q11. React: I called stopPropagation in onClick — why did my document listener still run?</summary>
     <p>React listens at the root container, so the native event already travelled there before your
       synthetic handler ran. Synthetic propagation follows the React tree, which is also why portals
-      bubble to the React parent rather than the DOM parent. (§6)</p></details>
+      bubble to the React parent rather than the DOM parent. (section 6)</p></details>
 
   <p class="note" style="margin-top:28px">👉 NEXT: no file yet. Natural follow-ups — debounce/throttle
     (the other half of handling noisy events like scroll, input and mouseover) and
-    AbortController/cancellation, which also closes <code>retry-with-backoff.js</code> §4.2.</p>
+    AbortController/cancellation, which also closes <code>retry-with-backoff.js</code> section 4.2.</p>
 
 </main>
 
@@ -465,7 +465,7 @@ if (e.target.closest('.delete')) del(row.dataset.id);</code></pre>
   // ── 2. target vs currentTarget ──────────────────────────────────────────
   function targetVsCurrentTarget() {
     document.querySelector('#demo2-list li').addEventListener('click', (e) => {
-      mark('§2 click');
+      mark('section 2 click');
       log('e.target:', e.target);               // what was hit — stays the same
       log('e.currentTarget:', e.currentTarget); // where the listener lives
       log("e.target.closest('li').dataset.id:", e.target.closest('li').dataset.id);
@@ -491,7 +491,7 @@ if (e.target.closest('.delete')) del(row.dataset.id);</code></pre>
 
     // ONE listener, for rows that didn't exist when it was attached
     document.querySelector('#items-list').addEventListener('click', (e) => {
-      mark('§3 click');
+      mark('section 3 click');
       log('e.target:', e.target);
       log('e.currentTarget:', e.currentTarget);
       if (e.target.closest('.deleteBtn')) {         // closest, not ===

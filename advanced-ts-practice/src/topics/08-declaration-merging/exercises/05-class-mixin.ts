@@ -10,7 +10,7 @@
      ⚠️ = gotcha worth memorizing      💡 = interview takeaway
      📝 = write your prediction/answer BEFORE running tsc
 
-   📖 THEORY: ../declaration-merging.ts §4 (namespace + class) and §6 (interface + class)
+   📖 THEORY: ../declaration-merging.ts section 4 (namespace + class) and section 6 (interface + class)
    🔑 SOLUTION: ./solutions/05-class-mixin.ts
 
    DRILLS

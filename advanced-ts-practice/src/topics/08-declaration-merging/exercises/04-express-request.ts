@@ -6,7 +6,7 @@
      ⚠️ = gotcha worth memorizing      💡 = interview takeaway
      📝 = write your prediction BEFORE running tsc
 
-   📖 THEORY: ../declaration-merging.ts §4 (namespace merging) + ../module-augmentation.ts §4
+   📖 THEORY: ../declaration-merging.ts section 4 (namespace merging) + ../module-augmentation.ts section 4
    🎯 TARGET: ./mock/express.ts — pretend it's express + @types/express. DO NOT EDIT IT.
    🔑 SOLUTION: ./solutions/04-express-request.ts
 

@@ -56,7 +56,7 @@ const dir2 = 'up';
 move(dir2); // OK: `dir2` is of literal type 'up', which satisfies 'up' | 'down'
 // 👉 Three fixes when widening bites you: use `const`, add `as const`, or annotate
 //    the variable (`let dir: 'up' | 'down' = 'up'`). Same fix set as the reducer
-//    action gotcha in AdvancedTypes.ts §1 — it's the same rule in a different costume.
+//    action gotcha in AdvancedTypes.ts section 1 — it's the same rule in a different costume.
 
 /* 💡 SECTION 1 TAKEAWAY
    - `let` widens a literal to its base type; `const` keeps the literal (primitives only).
@@ -157,7 +157,7 @@ const arr2 = ['up', 'down'] as const; // readonly ['up', 'down']
 // ⚠️ Note it changes THREE things at once: string[] -> tuple (fixed length),
 //    string -> 'up' | 'down' (literals), and mutable -> readonly.
 //    The readonly part is what makes `as const` arrays fail a `T[]` parameter —
-//    see IsArray / Elem in AdvancedTypes.ts §3. Accept `readonly T[]` instead.
+//    see IsArray / Elem in AdvancedTypes.ts section 3. Accept `readonly T[]` instead.
 
 /* 💡 SECTION 5 TAKEAWAY
    - `as const` = deepest literal type + readonly everywhere + arrays become tuples.

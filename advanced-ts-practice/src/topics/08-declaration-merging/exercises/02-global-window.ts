@@ -6,7 +6,7 @@
      ⚠️ = gotcha worth memorizing      💡 = interview takeaway
      📝 = write your prediction BEFORE running tsc
 
-   📖 THEORY: ../global-augmentation.ts §2 and §3
+   📖 THEORY: ../global-augmentation.ts section 2 and section 3
    🔑 SOLUTION: ./solutions/02-global-window.ts
 
    ⚙️ REQUIRES "moduleDetection": "auto" (or "legacy"). Vite's template default is "force",
@@ -65,7 +65,7 @@ const s = ["a", "b"].last(); // ✅ string | undefined
 
 // ⚠️ THE BROADER POINT: this augmentation now claims EVERY array in the program has .last(),
 //    including arrays from node_modules that will never have it. Global augmentation has no
-//    scope and no opt-out — see ../declaration-merging.ts §8.
+//    scope and no opt-out — see ../declaration-merging.ts section 8.
 
 /* ---- 2c. ⚠️ Trap. Predict before compiling. -------------------------------
    Does a bare `interface Window { __OTHER__: number }` merge with the real Window? */

@@ -9,11 +9,11 @@
         1. declaration-merging.ts    the RULES: what merges with what
         2. module-augmentation.ts    the AUGMENTOR: reaching into a module you don't own
         3. global-augmentation.ts ← YOU ARE HERE   the CONSUMER + `declare global` + Q&A
-      File 1 exports `Session`, file 2 augments it, and §1 below imports it and sees BOTH halves. 🔗
+      File 1 exports `Session`, file 2 augments it, and section 1 below imports it and sees BOTH halves. 🔗
 
-   ⚠️ THIS FILE IS DELIBERATELY A SCRIPT (no top-level import/export), because §2's whole point
-      is what happens to `declare global` in a script. That makes §1 and §2 MUTUALLY EXCLUSIVE:
-      uncommenting §1's import turns the file into a module and §2's error disappears.
+   ⚠️ THIS FILE IS DELIBERATELY A SCRIPT (no top-level import/export), because section 2's whole point
+      is what happens to `declare global` in a script. That makes section 1 and section 2 MUTUALLY EXCLUSIVE:
+      uncommenting section 1's import turns the file into a module and section 2's error disappears.
       Toggle one at a time — the switch itself is the lesson. 💡
 
    CONTENTS
@@ -24,7 +24,7 @@
 
    THE MODEL 🧠
      Global scope is just another merge target — `declare global` re-enters the GLOBAL scope
-     the same way `declare module 'x'` re-enters a module's scope (file 2 §2). The catch:
+     the same way `declare module 'x'` re-enters a module's scope (file 2 section 2). The catch:
      you can only re-enter global FROM somewhere else, and a script file is already there.
      That's the entire reason for the module requirement.
    ============================================================================ */
@@ -55,7 +55,7 @@
 
    💡 THE TAKEAWAY: `moduleDetection` only controls whether TS *treats* a file as a module —
       it does not change what `declare global` requires, which is an ACTUAL module.
-      Fix: uncomment either the import in §1 or the `export {}` below. */
+      Fix: uncomment either the import in section 1 or the `export {}` below. */
 
 // export {}
 declare global { // ❌ TS2669 — this file is a script, so there is no "outside global" to re-enter from
@@ -70,7 +70,7 @@ declare global { // ❌ TS2669 — this file is a script, so there is no "outsid
 // 3. DUPLICATE GLOBAL AUGMENTATION ✅
 // ─────────────────────────────────────────────────────────────────────────────
 /* declaration-merging.ts declares this EXACT same Window.__APP__ member. No clash — and that's
-   file 1 §2's CONSTRAINT 1 doing its job: identical non-method members may repeat across merges;
+   file 1 section 2's CONSTRAINT 1 doing its job: identical non-method members may repeat across merges;
    TS2717 only fires when the types DISAGREE.
    ⚠️ Flip one of them to `version: number` and you'd get TS2717 across FILE BOUNDARIES — which is
       the practical pain of global augmentation: two libraries can each augment Window and conflict. */
@@ -98,7 +98,7 @@ declare global { // ❌ TS2669 — this file is a script, so there is no "outsid
       Single-LITERAL parameter overloads get hoisted above the wide ones, even from the earlier
       interface — so `m('div')` hits the literal one. A UNION (`'div' | 'canvas'`) is NOT hoisted,
       so `m('canvas')` falls through to `m(x: unknown)` and never reaches the overload written for
-      it. That asymmetry is the trick question. (file 1 §3)
+      it. That asymmetry is the trick question. (file 1 section 3)
 
  ** Q6. Where must a namespace sit relative to the function or class it merges with?
       AFTER. ❌ TS2434 otherwise. Enums are the exception — order is free there. And only

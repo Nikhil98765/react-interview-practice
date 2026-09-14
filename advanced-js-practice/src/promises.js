@@ -603,60 +603,60 @@ const delay = (ms, val) => new Promise((res) => setTimeout(() => res(val), ms));
 // 9. INTERVIEW Q&A 🎤
 // ─────────────────────────────────────────────────────────────────────────────
 /**
- ** Q1. Trace the 1-7 ordering in §2.
+ ** Q1. Trace the 1-7 ordering in section 2.
       All sync first; then the microtask queue drains FIFO; then macrotasks. A chained .then
       is only queued once its parent settles, so it joins the BACK of the queue.
 
  ** Q2. Does a .catch make the chain fulfilled or rejected?
       FULFILLED. Handling a rejection is recovery — the chain resumes on the happy path with
-      whatever the handler returned. To keep it rejected you must rethrow. (§3)
+      whatever the handler returned. To keep it rejected you must rethrow. (section 3)
 
  ** Q3. What does .then(null) pass down? And a .then whose callback returns nothing?
       .then(null) passes the ORIGINAL value through untouched. A handler with no return sends
-      `undefined` downstream. Missing handler ≠ handler returning nothing. (§3)
+      `undefined` downstream. Missing handler ≠ handler returning nothing. (section 3)
 
  ** Q4. Can `finally` change the result?
       Only by THROWING (or by delaying it). It gets no value, its return is ignored, and it
-      can't recover — but a throw inside it replaces the outcome for everything downstream. (§4)
+      can't recover — but a throw inside it replaces the outcome for everything downstream. (section 4)
 
  ** Q5. race vs any?
       race settles on the first SETTLE either way; any waits for the first FULFILLMENT and
-      only rejects (AggregateError) if every input fails. (§6)
+      only rejects (AggregateError) if every input fails. (section 6)
 
  ** Q6. What do the four aggregators do with an empty array?
-      all -> [], allSettled -> [], any -> rejects AggregateError, race -> pending FOREVER. (§6)
+      all -> [], allSettled -> [], any -> rejects AggregateError, race -> pending FOREVER. (section 6)
 
  ** Q7. Implement Promise.all. What are the three moves?
       Promise.resolve() each item (free thenable support), write results BY INDEX with a
-      SEPARATE completion counter, and guard the empty case before the loop. (§7)
+      SEPARATE completion counter, and guard the empty case before the loop. (section 7)
 
  ** Q8. Why not `if (!(x instanceof Promise))` in the polyfill?
       A thenable isn't instanceof Promise, so it'd be stored raw instead of awaited.
-      Promise.resolve handles native promises, thenables and plain values uniformly. (§7)
+      Promise.resolve handles native promises, thenables and plain values uniformly. (section 7)
 
  ** Q9. Implement allSettled in one line using all.
       Map every input through `.then(v => ({status:'fulfilled',value:v}),
-      r => ({status:'rejected',reason:r}))` so nothing can ever reject, then hand it to all. (§7)
+      r => ({status:'rejected',reason:r}))` so nothing can ever reject, then hand it to all. (section 7)
 
  ** Q10. `array.forEach(async ...)` — what actually happens?
       forEach ignores the returned promise, so it doesn't wait — but the work still RUNS and
       lands later, corrupting shared state, and any error becomes an unhandled rejection
-      (fatal in Node). Use for...of or map+Promise.all. (§8.2, §8.9)
+      (fatal in Node). Use for...of or map+Promise.all. (section 8.2, section 8.9)
 
  ** Q11. Does Promise.race cancel the loser?
       No. Nothing cancels a promise. The loser runs to completion with all its side effects
       and can hold the process open. Use AbortController and thread the signal into the
-      work itself. (§8.5)
+      work itself. (section 8.5)
 
  ** Q12. When is `return await` NOT redundant?
       Inside try/catch. `return promise` exits the try before the rejection happens, so the
-      catch never fires; `return await promise` settles it while still inside. (§8.7)
+      catch never fires; `return await promise` settles it while still inside. (section 8.7)
 
  ** Q13. Are these parallel or serial?
         const a = slow(); const b = slow(); await a; await b;   -> PARALLEL
         await slow(); await slow();                             -> SERIAL
-      Promises start at CREATION, not at await. To get laziness you need a function. (§8.3)
+      Promises start at CREATION, not at await. To get laziness you need a function. (section 8.3)
  */
 
 // 👉 NEXT: concurrency-limiter.js — running N promises at a time (the natural follow-up to
-//    §8.1, and a very common "now limit it to 3 concurrent" interview extension).
+//    section 8.1, and a very common "now limit it to 3 concurrent" interview extension).

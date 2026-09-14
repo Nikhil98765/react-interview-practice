@@ -6,7 +6,7 @@
      ⚠️ = gotcha worth memorizing      💡 = interview takeaway
      📝 = write your prediction BEFORE running tsc
 
-   📖 THEORY: ../module-augmentation.ts §2 and §4
+   📖 THEORY: ../module-augmentation.ts section 2 and section 4
    🎯 TARGET: ./mock/analytics.ts — pretend it lives in node_modules. DO NOT EDIT IT.
    🔑 SOLUTION: ./solutions/03-module-augmentation.ts
 
@@ -47,6 +47,6 @@ const defaults = makeDefaultOptions();
    Make `import { flush }` compile, then answer: what happens when you CALL it? */
 // 📝 ANSWER: it type-checks and 💥 throws "flush is not a function" at runtime — unless the
 // shipped JS already had it. `declare` emits nothing; you asserted a value into existence.
-// 💡 Same trust boundary as interface+class in ../declaration-merging.ts §6:
+// 💡 Same trust boundary as interface+class in ../declaration-merging.ts section 6:
 //    the compiler believes you, the runtime does not.
 flush();

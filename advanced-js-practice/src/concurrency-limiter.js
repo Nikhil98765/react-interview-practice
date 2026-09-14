@@ -57,7 +57,7 @@ const sleep = (ms) => new Promise(res => setTimeout(() => res(''), ms));
 // const p = await Promise.all(ids.map(fetchOne)); // parallel, concurrency - N. This might hit rate limit of an API or make the server crash if it is implemented in Node JS code.
 // const end2 = performance.now();
 // console.log(`🚀 ~ time taken for parallel: ${end2 - start2}`);     // => ~52ms (MAX: slowest one)
-// ⚠️ `ids.map(fetchOne)` starts all 5, not Promise.all. Fine for 5, a self-DoS for 5,000 (§6.1).
+// ⚠️ `ids.map(fetchOne)` starts all 5, not Promise.all. Fine for 5, a self-DoS for 5,000 (section 6.1).
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 2. CHUNKING — the tempting middle ground 🧱
@@ -81,7 +81,7 @@ async function mapChunked(items, limit, worker) {
 // console.log(`🚀 ~ time taken for middle ground(chunks): ${end3 - start3}`, chunked);
 //   // => ~114ms, [2, 4, 6, 8, 10]. Chunks [1,2] [3,4] [5] -> 20 + 40 + 50 = 110.
 //   //    The slot that finished 3 sits idle 10ms waiting on 4. The pool fixes that.
-// ❌ limit 0 or -1 freezes the process (§6.6).
+// ❌ limit 0 or -1 freezes the process (section 6.6).
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 3. APPROACH 1 — POOL PATTERN 🏊  (limit RUNNERS, each pulls the next index)
@@ -97,7 +97,7 @@ async function mapChunked(items, limit, worker) {
      t=60  B exits.   t=90  A exits.   total ≈ 90ms
 */
 async function asyncPool(items, limit, worker) {
-  if (!(Number.isInteger(limit) && limit > 0)) throw new TypeError('limit must be a positive integer'); // ⚠️ §6.6
+  if (!(Number.isInteger(limit) && limit > 0)) throw new TypeError('limit must be a positive integer'); // ⚠️ section 6.6
 
   const result = new Array(items.length); // pre-allocate.
   let i = 0; // state shared between runners
@@ -107,7 +107,7 @@ async function asyncPool(items, limit, worker) {
     while (i < items.length && !abort) {
       const index = i;
       i++; // increment is safe, because i is in parent scope of runner and shared by all runners. before await everything runs synchronous and doesn't run into any race condition.
-      // ✅ Precisely: read + bump happen in one sync step. An await between them = duplicates (§6.5).
+      // ✅ Precisely: read + bump happen in one sync step. An await between them = duplicates (section 6.5).
       // * Gotcha 2 - If worker rejects it, Promise.all will reject right away but other workers will still be running even though Promise.all is rejected.
       //   ✅ No abort flag, item 1 fails at 10ms: rejects at ~12ms with [1, 2] started, yet
       //      3, 4, 5, 6 all start later anyway.
@@ -121,7 +121,7 @@ async function asyncPool(items, limit, worker) {
        *      => 6 items, odd ones fail, limit 2: all 6 records in order, max in-flight 2.
        * Fix 2 - catch the error using try / catch and set a flag that will stop loop for other workers as well.
        *   ✅ Fail on item 2 of 6: started [1, 2, 3], nothing more. But 3 still finishes.
-       *      The flag stops NEW work only (cancel in-flight: §6.2).
+       *      The flag stops NEW work only (cancel in-flight: section 6.2).
        */
       // Fix 2
       try {
@@ -165,14 +165,14 @@ async function asyncPool(items, limit, worker) {
  ** pLimit - one run closure per task, limit comes from active
 */
 export function pLimit(concurrency) {
-  if (!(Number.isInteger(concurrency) && concurrency > 0)) throw new TypeError('concurrency must be a positive integer'); // ⚠️ pLimit(0) hangs forever (§6.6)
+  if (!(Number.isInteger(concurrency) && concurrency > 0)) throw new TypeError('concurrency must be a positive integer'); // ⚠️ pLimit(0) hangs forever (section 6.6)
 
   const queue = []; // contains runners for deferred tasks, once run function got resolved the returned promise to promise.all will be resolved.
   let active = 0; // count of active runners in flight.
 
   const next = () => {
     active--;
-    if (queue.length > 0) queue.shift()(); // ⚠️ shift() is O(n): fine for thousands, not 100k (§6.9)
+    if (queue.length > 0) queue.shift()(); // ⚠️ shift() is O(n): fine for thousands, not 100k (section 6.9)
   }
 
   return function limit(worker, ...args) {
@@ -180,7 +180,7 @@ export function pLimit(concurrency) {
       // 💡 Caller gets this promise NOW; it settles whenever `run` eventually calls resolve/reject.
       const run = () => {
         active++;
-        new Promise((res) => res(worker(...args))) // ✅ sync throw -> rejection (§6.8)
+        new Promise((res) => res(worker(...args))) // ✅ sync throw -> rejection (section 6.8)
           .then(resolve, reject)
           .finally(next);
         // ⚠️ Was `Promise.resolve(worker(...args))`: a sync throw skipped .finally(next) and leaked the slot.
@@ -229,10 +229,10 @@ export function pLimit(concurrency) {
                         POOL (asyncPool)                  pLimit
    shape                 fn(items, limit, worker)         limit = pLimit(n); limit(fn, ...args)
    what's limited        number of RUNNER loops           shared `active` counter
-   objects alive         `limit` runners                  promise + closure PER TASK, all at once (§6.9)
+   objects alive         `limit` runners                  promise + closure PER TASK, all at once (section 6.9)
    scope                 one batch                        app-wide, shared across modules/requests
    input                 whole array up front             tasks can arrive any time
-                         (iterator version is lazy, §6.9)
+                         (iterator version is lazy, section 6.9)
    stop on first error   easy: one flag (Fix 2)           not built in
    result order          by index                         Promise.all keeps it
 
@@ -306,7 +306,7 @@ export function pLimit(concurrency) {
 // ✅ Fix: handle every promise up front —
 //    await Promise.allSettled(p1);          // => ['fulfilled', 'rejected']
 //    p1.map((p) => p.catch((e) => e))       // then await in order, no crash
-//    Best: create them late (thunks, §6.1).
+//    Best: create them late (thunks, section 6.1).
 
 /* ---- 6.4 ⚠️ A concurrency limiter is not a rate limiter (Gotcha 4) ------------ */
 // * Gotcha 4 - Limiter is not a rate limiter
@@ -346,7 +346,7 @@ export function pLimit(concurrency) {
 //   asyncPool([1, 2], -1, job)  // => same (Array.from({ length: -1 }) is [])
 //   asyncPool([1, 2], NaN, job) // => same (Math.min(NaN, 2) is NaN -> length 0)
 //   pLimit(0)(job)              // => pending FOREVER
-// ❌ Worst: mapChunked (§2, still unguarded) with 0 or -1. `i += 0` never ends, and each pass
+// ❌ Worst: mapChunked (section 2, still unguarded) with 0 or -1. `i += 0` never ends, and each pass
 //    awaits Promise.all([]) (a microtask), so the event loop never runs: a 50ms timer never
 //    fired, process had to be killed. Frozen, not just hung.
 // ⚠️ Typical source: config/env. Number(undefined) -> NaN, Number('') -> 0. Validate at the boundary.
@@ -380,48 +380,48 @@ export function pLimit(concurrency) {
 // ─────────────────────────────────────────────────────────────────────────────
 /**
  ** Q1. Why can't Promise.all limit concurrency?
-      It starts nothing — its promises are already running. Limit CREATION: take thunks. (§1, §6.1)
+      It starts nothing — its promises are already running. Limit CREATION: take thunks. (section 1, section 6.1)
 
  ** Q2. Why is chunking slower than a pool at the same limit?
       A chunk waits for its slowest item; freed slots idle. A pool refills at once.
-      5 jobs, limit 2: ~114ms vs ~93ms. (§2, §3)
+      5 jobs, limit 2: ~114ms vs ~93ms. (section 2, section 3)
 
  ** Q3. The pool shares `let i`. Race condition?
-      No — read + bump is one sync step. An await between them -> [1, 1, 3, 3]. (§3, §6.5)
+      No — read + bump is one sync step. An await between them -> [1, 1, 3, 3]. (section 3, section 6.5)
 
  ** Q4. How does the pool keep input order?
-      `result[index] = …`, never push. (§3)
+      `result[index] = …`, never push. (section 3)
 
  ** Q5. One task fails. What happens to the rest?
       Promise.all rejects, but started tasks keep running (no cancel). A flag stops NEW ones;
-      an AbortController passed into the worker stops running ones — if the worker listens. (§3, §6.2)
+      an AbortController passed into the worker stops running ones — if the worker listens. (section 3, section 6.2)
 
  ** Q6. allSettled over the runners = every failure collected?
       No — one result per RUNNER. A thrower leaves its loop, concurrency drops. Catch per
-      item and store { status, value | reason }. (§3 Fix 1)
+      item and store { status, value | reason }. (section 3 Fix 1)
 
  ** Q7. Pool or pLimit?
       Pool: one known list, easy stop-on-error, memory = limit. pLimit: shared app-wide cap,
-      tasks arrive any time. (§5)
+      tasks arrive any time. (section 5)
 
  ** Q8. Implement pLimit — the pieces?
       Counter + FIFO queue of `run` closures + limit() returning a new Promise: run now if
       active < n, else queue; on settle, decrement and start the next. Wrap the call so a
-      SYNC throw still frees the slot. (§4, §6.8)
+      SYNC throw still frees the slot. (section 4, section 6.8)
 
  ** Q9. Concurrency vs rate limit?
       Running at once vs starts per time. pLimit(2) started 86 in 100ms. Both needed? Spacer
-      INSIDE the limit — outside, queued tasks start 2ms apart despite 20ms spacing. (§6.4)
+      INSIDE the limit — outside, queued tasks start 2ms apart despite 20ms spacing. (section 6.4)
 
  ** Q10. How can a limiter deadlock?
-      A task awaits same-limiter work while holding a slot; once all slots wait, nothing moves. (§6.7)
+      A task awaits same-limiter work while holding a slot; once all slots wait, nothing moves. (section 6.7)
 
  ** Q11. [sleep(50), Promise.reject(e)] in for...of + try/catch crashes Node. Why? And why not
          with Promise.resolve(1) first?
       The rejection is still handler-less when the microtask queue drains (the 50ms await
       guarantees a drain). A resolved first item costs only microtasks, so the handler lands
-      in time. Fix: allSettled, or .catch each up front. (§6.3)
+      in time. Fix: allSettled, or .catch each up front. (section 6.3)
  */
 
 // 👉 NEXT: retry-with-backoff.js — handling a failed task. Pair it: limit(() => retry(fn))
-//    keeps retries under the cap, but the backoff sleep holds the slot (same trade-off as §6.4).
+//    keeps retries under the cap, but the backoff sleep holds the slot (same trade-off as section 6.4).

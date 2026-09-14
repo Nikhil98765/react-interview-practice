@@ -6,7 +6,7 @@
      ⚠️ = gotcha worth memorizing      💡 = interview takeaway
      📝 = write your prediction BEFORE running tsc
 
-   📖 THEORY: ../declaration-merging.ts §2 and §3
+   📖 THEORY: ../declaration-merging.ts section 2 and section 3
    🔑 SOLUTION: ./solutions/01-interface-merging.ts  (only after you've compiled your own attempt)
 
    DRILLS

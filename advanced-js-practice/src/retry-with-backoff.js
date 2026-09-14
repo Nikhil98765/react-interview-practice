@@ -35,7 +35,7 @@
  ** Retry with exponential backoff - retry a failed operation few times and waiting longer before each retry with exponential delay because if it gives time for server to recover and trying it in every 100ms will make things worse. Two non negotiable's - jitter (random delay) and retryable error check (client errors)
  */
 
-import { pLimit } from "./concurrency-limiter.js"; // ⚠️ the .js is REQUIRED in ESM (§4.7)
+import { pLimit } from "./concurrency-limiter.js"; // ⚠️ the .js is REQUIRED in ESM (section 4.7)
 
 // Helpers
 const sleep = (n) => new Promise((res, _) => {
@@ -75,7 +75,7 @@ function hangingApi(ms) {
    Loop forever; return on the first success. On failure, decide: retryable? attempts left?
    If either says no, rethrow. Otherwise sleep and go again.
 
-   ⚠️ `attempts` counts TOTAL CALLS, not extra retries: attempts 4 = 4 calls, 3 sleeps (§4.6).
+   ⚠️ `attempts` counts TOTAL CALLS, not extra retries: attempts 4 = 4 calls, 3 sleeps (section 4.6).
    Backoff ladder (baseMs 100, maxMs 2000): 100, 200, 400, 800, 1600, 2000, 2000 …
    `exp * Math.random()` is FULL jitter — the real wait is anywhere in [0, exp).
 */
@@ -83,11 +83,11 @@ async function retry(fn, {
   attempts = 4,
   maxMs = 2000,
   baseMs = 100,
-  isRetryable = (e) => e.status >= 500 || e.status === 429 || e.name === 'FetchError' // ⚠️ misses real fetch errors (§4.7)
+  isRetryable = (e) => e.status >= 500 || e.status === 429 || e.name === 'FetchError' // ⚠️ misses real fetch errors (section 4.7)
 } = {}) {
   for (let attempt = 0; ; attempt++) {
     try {
-      return await fn();     // ⚠️ fn must be a FUNCTION, not a promise (§4.8)
+      return await fn();     // ⚠️ fn must be a FUNCTION, not a promise (section 4.8)
     } catch (e) {
       if (!isRetryable(e) || attempt >= attempts - 1) throw e; // ✅ rethrow the ORIGINAL error
       const exp = Math.min(maxMs, baseMs * 2 ** attempt); // 100, 200, 400, 800
@@ -133,7 +133,7 @@ function withTimeout(promise, ms) {
     }, ms);
   });
   return Promise.race([timer, promise]);
-  // ⚠️ `id` is assigned but never cleared — that's the leak in §4.1. The one-line fix:
+  // ⚠️ `id` is assigned but never cleared — that's the leak in section 4.1. The one-line fix:
   //    return Promise.race([timer, promise]).finally(() => clearTimeout(id));
 }
 
@@ -215,7 +215,7 @@ function withTimeout(promise, ms) {
   Retry at http client, retry in service wrapper and retry in the call makes - 4 * 4 * 4 = 64 retries and this might flood the server with many calls and it makes things worse. Pick one layer in application code and have the retry mechanism used over there but not everywhere.
 */
 
-/* ---- 4.5 ⚠️ Retry inside a limit holds the slot — see §3 --------------------- */
+/* ---- 4.5 ⚠️ Retry inside a limit holds the slot — see section 3 --------------------- */
 
 /* ---- 4.6 ⚠️ `attempts` counts CALLS, not retries ----------------------------- */
 // => attempts 4 -> 4 calls, 3 sleeps. attempts 1 -> 1 call, no retry. attempts 0 -> 1 call
@@ -263,7 +263,7 @@ function withTimeout(promise, ms) {
   2. when operation is non-idempotent.
   3. when upstream handles retries and current layer adds retries then it multiplies the retries which makes things worse on server side
 */
-// 4. when the caller has a tight deadline — 4 attempts can cost 20s (§4.10).
+// 4. when the caller has a tight deadline — 4 attempts can cost 20s (section 4.10).
 // 💡 At scale the next question is a CIRCUIT BREAKER: after N consecutive failures, stop
 //    calling for a cooling-off period instead of retrying every request.
 
@@ -273,52 +273,52 @@ function withTimeout(promise, ms) {
 /**
  ** Q1. Why exponential backoff and not a fixed 100ms?
       Fixed retries keep the same pressure on a server that's already failing. Doubling gives
-      it room to recover, and caps the number of calls in the window. (§1)
+      it room to recover, and caps the number of calls in the window. (section 1)
 
  ** Q2. Why is jitter non-negotiable?
       Without it, every client that failed together retries together — verified: 5 clients hit
-      at the same 3 instants. Jitter spreads them out. (§4.9)
+      at the same 3 instants. Jitter spreads them out. (section 4.9)
 
  ** Q3. Which errors do you retry?
       Transient only: 5xx, 429, and no-response network errors. Never 4xx — it can't improve.
       Watch out: a failed global fetch is a TypeError with NO status, so a status-only check
-      silently skips it. (§1, §4.7)
+      silently skips it. (section 1, section 4.7)
 
  ** Q4. Why does retry need a timeout?
       A hung request never fails, so retry never fires. Wrap each attempt: retry(() =>
-      withTimeout(api(), ms)), timeout INSIDE, so every attempt gets a fresh deadline. (§2)
+      withTimeout(api(), ms)), timeout INSIDE, so every attempt gets a fresh deadline. (section 2)
 
  ** Q5. Does the timeout cancel the request?
       No. Promise.race only stops you listening — verified: the loser finished 2s later and
       held the process open. Only AbortController, with the signal threaded into fetch,
-      actually cancels. (§4.2)
+      actually cancels. (section 4.2)
 
  ** Q6. What must you never retry?
       Non-idempotent writes. A timeout doesn't tell you whether the server processed it —
-      retrying a POST /payments can charge twice. Send an idempotency key. (§4.3)
+      retrying a POST /payments can charge twice. Send an idempotency key. (section 4.3)
 
  ** Q7. `attempts: 4` — how many calls?
-      Four: one initial plus three retries, with three sleeps between them. (§4.6)
+      Four: one initial plus three retries, with three sleeps between them. (section 4.6)
 
  ** Q8. Retry inside the concurrency limiter, or outside?
       Both cap concurrency. Inside (limit(() => retry(...))) the backoff holds a slot, which
       caps what the server sees — the usual default. Outside frees slots during backoff but
       makes retries queue against fresh work. Measured: an unrelated task waited 488ms vs
-      43ms. (§3)
+      43ms. (section 3)
 
  ** Q9. Why can't you retry a promise?
       It already ran and it settles once, so every attempt sees the same outcome. Retry needs
-      a function. (§4.8)
+      a function. (section 4.8)
 
  ** Q10. Attempts or a deadline?
       A deadline. Four attempts with a 5s timeout each can burn 20.7s of a caller's budget.
       Pass AbortSignal.timeout(...), check it before sleeping, and clamp the sleep to the
-      time left. (§4.10)
+      time left. (section 4.10)
 
  ** Q11. Three retry layers, 4 attempts each — what's the real number?
-      64 calls for one logical request. Retry at ONE layer. (§4.4)
+      64 calls for one logical request. Retry at ONE layer. (section 4.4)
  */
 
-// 👉 NEXT: no file yet. The natural follow-ups are AbortController/cancellation (§4.2 is the
-//    only unsolved gotcha here) and a circuit breaker (§5). See concurrency-limiter.js §6.4
+// 👉 NEXT: no file yet. The natural follow-ups are AbortController/cancellation (section 4.2 is the
+//    only unsolved gotcha here) and a circuit breaker (section 5). See concurrency-limiter.js section 6.4
 //    for the rate-limit side of the same problem.

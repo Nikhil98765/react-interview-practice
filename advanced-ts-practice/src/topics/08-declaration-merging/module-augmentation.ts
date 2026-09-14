@@ -31,7 +31,7 @@
 
    ⚠️ THE BLAST RADIUS: an augmentation is PROGRAM-WIDE, not file-local. Importing this file
       is not required for its effect to apply; being in the compilation is enough. You are
-      editing the library's types for every file, including the library's own source (§4).
+      editing the library's types for every file, including the library's own source (section 4).
    ============================================================================ */
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -51,14 +51,14 @@
 export {}; // 🔑 REQUIRED: augmentation is only legal inside a MODULE. Any top-level import or
            //    export makes this file one; `export {}` is the zero-cost way to declare that.
 
-declare module './declaration-merging' { // ✅ a RELATIVE specifier is legal here — contrast §3
+declare module './declaration-merging' { // ✅ a RELATIVE specifier is legal here — contrast section 3
   interface Session {
     role: 'admin' | 'user'; // merges into the exported Session, which now has userId AND role
   }
   export function extraFn(): number; // ⚠️ augmentation can add VALUES too, not just type members —
                                      //    but only DECLARATIONS, never an implementation. Nothing
                                      //    defines extraFn at runtime, so calling it crashes. Same
-                                     //    "compiler trusts you" hazard as interface+class in file 1 §6.
+                                     //    "compiler trusts you" hazard as interface+class in file 1 section 6.
 }
 
 // 👉 See file 3 for the proof that this worked from a completely different file.
@@ -93,7 +93,7 @@ import { real, nonexistent } from 'fakelib'; // ❌ TS2307 here — fakelib genu
 
 // ⚠️ And the mirror-image restriction: an AMBIENT declaration can't use a relative specifier —
 //       declare module "./foo" { }   ❌ TS2436 "Ambient module declaration cannot specify relative module name."
-//    Relative specifiers are legal ONLY for augmentations inside a module, which is why §2 works.
+//    Relative specifiers are legal ONLY for augmentations inside a module, which is why section 2 works.
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 4. ⚠️ AUGMENTING WITH A REQUIRED MEMBER BREAKS THE LIBRARY
@@ -124,8 +124,8 @@ function makeSession(): Session1 {
     Before writing an augmentation, in order:
       1. Do I own the type? -> just edit it, stop here.
       2. Is the file a module? -> if not, `export {}` first, or you'll silently get an
-         ambient declaration (§3) or a TS2669 on `declare global` (file 3).
-      3. Is every member I'm adding OPTIONAL? -> if not, §4 says I may break the lib's own source.
+         ambient declaration (section 3) or a TS2669 on `declare global` (file 3).
+      3. Is every member I'm adding OPTIONAL? -> if not, section 4 says I may break the lib's own source.
       4. Am I adding a VALUE (function/const)? -> then something must implement it at runtime.
       5. Would a wrapper type do instead? -> prefer it; it has no blast radius.
 

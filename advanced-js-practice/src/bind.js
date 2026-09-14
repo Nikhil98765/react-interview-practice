@@ -370,38 +370,38 @@ console.log("🚀 ~ PBindNew instanceof Person:", PBindNew instanceof Person);
 
  ** Q2. Same function, two owners — what's `this`?
       Whichever object it was called through. `b.m = a.m` shares one function object;
-      a.m() gives a, b.m() gives b. `this` is never baked in. (§1)
+      a.m() gives a, b.m() gives b. `this` is never baked in. (section 1)
 
  ** Q3. Can `call` override a `bind`?
       No. bind wins, and a second bind is a no-op on `this` — the first is permanent.
-      The only thing that beats bind is `new`. (§2)
+      The only thing that beats bind is `new`. (section 2)
 
  ** Q4. Why doesn't an arrow in an object literal see the object?
       An object literal is not a scope. The arrow looks outward to the nearest real scope —
-      module scope here, so `this` is undefined in an ES module. (§3)
+      module scope here, so `this` is undefined in an ES module. (section 3)
 
  ** Q5. Why does setInterval(function(){...}) break inside a class method, but the arrow work?
       setInterval calls the callback with no receiver -> rule 4 -> undefined. The arrow never
-      consults the call site at all; it captured the method's `this` when it was written. (§4)
+      consults the call site at all; it captured the method's `this` when it was written. (section 4)
 
  ** Q6. Arrow class field vs prototype method — trade-off?
       The field is auto-bound but allocated per instance and absent from the prototype (so
       it can't be spied on or overridden). The method is shared but must be bound at the
-      call site. Verify with getOwnPropertyNames and a `===` comparison across instances. (§5)
+      call site. Verify with getOwnPropertyNames and a `===` comparison across instances. (section 5)
 
  ** Q7. Why can't an arrow be a constructor?
       `new` needs a `prototype` property to link the new object to, and a `this` slot to
-      write into. Arrows have neither. (§5)
+      write into. Arrows have neither. (section 5)
 
  ** Q8. Implement bind. What are the requirements?
       Return (don't call); prepend the partially-applied args; make `new` override the bound
       this via `this instanceof Bound`; and relink the prototype with
-      `Object.create(fn.prototype)` so instanceof still works. (§7)
+      `Object.create(fn.prototype)` so instanceof still works. (section 7)
 
  ** Q9. `Person.bind(obj, 'Ada')('Lovelace') instanceof Person` — true or false?
       FALSE, for both native bind and the polyfill. A plain call routes `this` to the thisArg
       object, which was never constructed from Person.prototype. Call it with `new` and it
-      becomes true. (§7)
+      becomes true. (section 7)
 
  ** Q10. What's wrong with the typical `Object(thisArg ?? globalThis)` call polyfill?
       Four things, and the good answer separates the bugs from the technique's limits:
@@ -410,14 +410,14 @@ console.log("🚀 ~ PBindNew instanceof Person:", PBindNew instanceof Person);
         LIMITS (not fixable by parking) — boxing primitives and sloppy null/undefined
           coercion. Parking needs an object to park on, so a primitive receiver can only be
           delivered by the engine (Reflect.apply). Mutation is likewise inherent: a frozen
-          thisArg still throws. (§7)
+          thisArg still throws. (section 7)
 
  ** Q11. Which parts of `bind` can't be polyfilled at all?
       The internal [[BoundTargetFunction]] slot. Native `instanceof` follows it to the target,
       which is why a bound function needs no `prototype` of its own. Userland has to fake that
       with `Object.create(fn.prototype)`, so a polyfilled bound function always carries a
       `prototype` property the native one doesn't have. Also worth adding for fidelity:
-      `name` -> "bound fn" and `length` reduced by the pre-applied args. (§7)
+      `name` -> "bound fn" and `length` reduced by the pre-applied args. (section 7)
  */
 
 // 👉 NEXT: `this` as a RETURN TYPE in TypeScript class methods — polymorphic `this` for
