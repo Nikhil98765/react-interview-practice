@@ -13,7 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, ...rest 
 
   useEffect(() => {
     // throw new Error("custom error from Input component"); // error caused in effects.
-    // setTimeout(() => {  throw new Error("custom error from Input component's setTimeout"); }, 0); // erro not caught
+    // setTimeout(() => {  throw new Error("custom error from Input component's setTimeout"); }, 0); // error not caught
   }, []);
 
   // throw new Error("custom error from Input component"); -> error caught (render phase)
