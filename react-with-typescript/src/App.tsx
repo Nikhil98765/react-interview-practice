@@ -9,6 +9,7 @@
      imperative-handle.tsx ....... refs, forwardRef vs React 19 ref-as-prop, useImperativeHandle
      ErrorBoundary.tsx ........... what a boundary catches, resetting, Suspense pairing
      sync-external-store.tsx ..... reading external state without tearing
+     react-19-actions.tsx ........ form actions, useActionState, queued dispatches
      Input.tsx / List.tsx ........ typed props, generics, forwardRef'd input
 
    ⚠️ "Bad snapshot (locks the tab)" is deliberately destructive — it demonstrates the
@@ -22,6 +23,7 @@ import { List } from './components/List';
 import { ExerciseParent, Parent, Parent1, RefCallback, RefExample, RefsAttachExample } from './components/imperative-handle';
 import { ErrorBoundary, ExerciseBuggyComp, ExerciseErrorBoundary, ExerciseFallbackComp, SaveButton, SiblingComp } from './components/ErrorBoundary';
 import { BadSnapshotDemo, StoreTestCountComponent, StoreTestNameComponent, SyncExternalStore, TestExerciseComponent, TestMiniStore } from './components/sync-external-store';
+import { FormActionsRoot, FormWithoutUseAction, FormWithUseAction } from './components/react-19-actions';
 
 // The error-boundary exercise needs the parent to own the reset state, so it gets its own wrapper.
 function ErrorBoundaryExercise() {
@@ -61,19 +63,63 @@ function TypedComponents() {
 }
 
 const DEMOS: { id: string; label: string; node: ReactNode }[] = [
-  { id: 'store-selectors', label: 'Store: selectors', node: <><StoreTestNameComponent /><StoreTestCountComponent /></> },
-  { id: 'store-mini', label: 'Store: mini store', node: <TestMiniStore /> },
-  { id: 'store-online', label: 'Store: online status', node: <SyncExternalStore /> },
-  { id: 'store-exercise', label: 'Store: exercise', node: <TestExerciseComponent /> },
-  { id: 'store-bad', label: '⚠️ Bad snapshot (locks the tab)', node: <BadSnapshotDemo /> },
-  { id: 'eb-exercise', label: 'Error boundary: exercise', node: <ErrorBoundaryExercise /> },
-  { id: 'refs-forward', label: 'Refs: forwardRef vs plain prop', node: <Parent /> },
-  { id: 'refs-handle', label: 'Refs: imperative handle', node: <Parent1 /> },
-  { id: 'refs-callback', label: 'Refs: callback refs', node: <RefCallback /> },
-  { id: 'refs-observer', label: 'Refs: observer cleanup', node: <RefExample /> },
-  { id: 'refs-timing', label: 'Refs: attach timing', node: <RefsAttachExample /> },
-  { id: 'refs-video', label: 'Refs: VideoPlayer exercise', node: <ExerciseParent /> },
-  { id: 'typed', label: 'Typed props / generics', node: <TypedComponents /> },
+  {
+    id: "store-selectors",
+    label: "Store: selectors",
+    node: (
+      <>
+        <StoreTestNameComponent />
+        <StoreTestCountComponent />
+      </>
+    ),
+  },
+  { id: "store-mini", label: "Store: mini store", node: <TestMiniStore /> },
+  {
+    id: "store-online",
+    label: "Store: online status",
+    node: <SyncExternalStore />,
+  },
+  {
+    id: "store-exercise",
+    label: "Store: exercise",
+    node: <TestExerciseComponent />,
+  },
+  {
+    id: "store-bad",
+    label: "⚠️ Bad snapshot (locks the tab)",
+    node: <BadSnapshotDemo />,
+  },
+  {
+    id: "eb-exercise",
+    label: "Error boundary: exercise",
+    node: <ErrorBoundaryExercise />,
+  },
+  {
+    id: "refs-forward",
+    label: "Refs: forwardRef vs plain prop",
+    node: <Parent />,
+  },
+  { id: "refs-handle", label: "Refs: imperative handle", node: <Parent1 /> },
+  { id: "refs-callback", label: "Refs: callback refs", node: <RefCallback /> },
+  {
+    id: "refs-observer",
+    label: "Refs: observer cleanup",
+    node: <RefExample />,
+  },
+  {
+    id: "refs-timing",
+    label: "Refs: attach timing",
+    node: <RefsAttachExample />,
+  },
+  {
+    id: "refs-video",
+    label: "Refs: VideoPlayer exercise",
+    node: <ExerciseParent />,
+  },
+  { id: "typed", label: "Typed props / generics", node: <TypedComponents /> },
+  { id: "actions-newsletter", label: "Actions: newsletter + boundary", node: <FormActionsRoot /> },
+  { id: "actions-manual", label: "Actions: manual plumbing (no hook)", node: <FormWithoutUseAction /> },
+  { id: "actions-hook", label: "Actions: useActionState + queueing", node: <FormWithUseAction /> },
 ];
 
 function App() {
