@@ -10,6 +10,7 @@
      ErrorBoundary.tsx ........... what a boundary catches, resetting, Suspense pairing
      sync-external-store.tsx ..... reading external state without tearing
      react-19-actions.tsx ........ form actions, useActionState, queued dispatches
+     use-form-status.tsx ......... a child reading its parent form's submit state
      Input.tsx / List.tsx ........ typed props, generics, forwardRef'd input
 
    ⚠️ "Bad snapshot (locks the tab)" is deliberately destructive — it demonstrates the
@@ -24,6 +25,7 @@ import { ExerciseParent, Parent, Parent1, RefCallback, RefExample, RefsAttachExa
 import { ErrorBoundary, ExerciseBuggyComp, ExerciseErrorBoundary, ExerciseFallbackComp, SaveButton, SiblingComp } from './components/ErrorBoundary';
 import { BadSnapshotDemo, StoreTestCountComponent, StoreTestNameComponent, SyncExternalStore, TestExerciseComponent, TestMiniStore } from './components/sync-external-store';
 import { FormActionsRoot, FormWithoutUseAction, FormWithUseAction } from './components/react-19-actions';
+import { FormStatusRoot, ParentForm } from './components/use-form-status';
 
 // The error-boundary exercise needs the parent to own the reset state, so it gets its own wrapper.
 function ErrorBoundaryExercise() {
@@ -120,6 +122,8 @@ const DEMOS: { id: string; label: string; node: ReactNode }[] = [
   { id: "actions-newsletter", label: "Actions: newsletter + boundary", node: <FormActionsRoot /> },
   { id: "actions-manual", label: "Actions: manual plumbing (no hook)", node: <FormWithoutUseAction /> },
   { id: "actions-hook", label: "Actions: useActionState + queueing", node: <FormWithUseAction /> },
+  { id: "form-status", label: "Form status: two actions", node: <FormStatusRoot /> },
+  { id: "form-status-parent", label: "Form status: formAction + dispatch", node: <ParentForm /> },
 ];
 
 function App() {
