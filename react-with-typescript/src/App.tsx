@@ -11,6 +11,7 @@
      sync-external-store.tsx ..... reading external state without tearing
      react-19-actions.tsx ........ form actions, useActionState, queued dispatches
      use-form-status.tsx ......... a child reading its parent form's submit state
+     use-optimistic.tsx .......... temporary values tied to an action's lifetime
      Input.tsx / List.tsx ........ typed props, generics, forwardRef'd input
 
    ⚠️ "Bad snapshot (locks the tab)" is deliberately destructive — it demonstrates the
@@ -26,6 +27,7 @@ import { ErrorBoundary, ExerciseBuggyComp, ExerciseErrorBoundary, ExerciseFallba
 import { BadSnapshotDemo, StoreTestCountComponent, StoreTestNameComponent, SyncExternalStore, TestExerciseComponent, TestMiniStore } from './components/sync-external-store';
 import { FormActionsRoot, FormWithoutUseAction, FormWithUseAction } from './components/react-19-actions';
 import { FormStatusRoot, ParentForm } from './components/use-form-status';
+import { LikeButton, LikeDemo, OptimisticRoot } from './components/use-optimistic';
 
 // The error-boundary exercise needs the parent to own the reset state, so it gets its own wrapper.
 function ErrorBoundaryExercise() {
@@ -124,6 +126,9 @@ const DEMOS: { id: string; label: string; node: ReactNode }[] = [
   { id: "actions-hook", label: "Actions: useActionState + queueing", node: <FormWithUseAction /> },
   { id: "form-status", label: "Form status: two actions", node: <FormStatusRoot /> },
   { id: "form-status-parent", label: "Form status: formAction + dispatch", node: <ParentForm /> },
+  { id: "optimistic-thread", label: "Optimistic: thread + boundary", node: <OptimisticRoot /> },
+  { id: "optimistic-like", label: "Optimistic: like that always fails", node: <LikeDemo id="42" /> },
+  { id: "optimistic-swallow", label: "Optimistic: thread, errors swallowed", node: <LikeButton /> },
 ];
 
 function App() {
