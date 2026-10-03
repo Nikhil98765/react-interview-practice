@@ -12,6 +12,7 @@
      react-19-actions.tsx ........ form actions, useActionState, queued dispatches
      use-form-status.tsx ......... a child reading its parent form's submit state
      use-optimistic.tsx .......... temporary values tied to an action's lifetime
+     metadata.tsx ................ <title>/<meta>/<link> hoisting, and the React Compiler
      Input.tsx / List.tsx ........ typed props, generics, forwardRef'd input
 
    ⚠️ "Bad snapshot (locks the tab)" is deliberately destructive — it demonstrates the
@@ -28,6 +29,7 @@ import { BadSnapshotDemo, StoreTestCountComponent, StoreTestNameComponent, SyncE
 import { FormActionsRoot, FormWithoutUseAction, FormWithUseAction } from './components/react-19-actions';
 import { FormStatusRoot, ParentForm } from './components/use-form-status';
 import { LikeButton, LikeDemo, OptimisticRoot } from './components/use-optimistic';
+import { DocumentMetadataAndCompilerRoot, DupProductPage, ProductPage } from './components/metadata';
 
 // The error-boundary exercise needs the parent to own the reset state, so it gets its own wrapper.
 function ErrorBoundaryExercise() {
@@ -129,6 +131,18 @@ const DEMOS: { id: string; label: string; node: ReactNode }[] = [
   { id: "optimistic-thread", label: "Optimistic: thread + boundary", node: <OptimisticRoot /> },
   { id: "optimistic-like", label: "Optimistic: like that always fails", node: <LikeDemo id="42" /> },
   { id: "optimistic-swallow", label: "Optimistic: thread, errors swallowed", node: <LikeButton /> },
+  { id: "metadata-title", label: "Metadata: title exercise", node: <DocumentMetadataAndCompilerRoot /> },
+  { id: "metadata-product", label: "Metadata: title + meta + stylesheet", node: <ProductPage name="Sony headphones" /> },
+  {
+    id: "metadata-dup",
+    label: "Metadata: two pages, one stylesheet",
+    node: (
+      <>
+        <ProductPage name="Sony headphones" />
+        <DupProductPage />
+      </>
+    ),
+  },
 ];
 
 function App() {

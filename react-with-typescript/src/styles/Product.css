@@ -1,0 +1,9 @@
+/* Loaded by <link rel="stylesheet" precedence="default"> in components/metadata.tsx.
+   React never removes a precedence stylesheet, so these rules outlive the component that
+   asked for them (metadata.tsx Gotcha 4). Everything is scoped to .product-page so it can't
+   leak onto other demos once it's in <head>. */
+.product-page {
+  border-left: 4px solid #8c5a2b;
+  padding: 8px 12px;
+  margin: 8px 0;
+}
