@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js — interview revision sheets
 
-## Getting Started
-
-First, run the development server:
+Next 16.3.8 (App Router) · React 19.2.8. Each topic is a folder under `app/`: a **sheet** you
+read in the browser, with **live demo routes** beside it that prove each claim.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000 — keep the terminal visible, the server log is half the proof
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> This Next version has breaking changes from older ones (`params` is a Promise, `error.tsx`
+> receives `retry`, typed `LayoutProps` / `PageProps` helpers). `AGENTS.md` points at the
+> bundled docs in `node_modules/next/dist/docs/` — check those before trusting a tutorial.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/
+  layout.tsx          root layout; the nav is built from _lib/topics.ts
+  page.tsx            home: the list of sheets
+  globals.css         plain CSS for the sheets (no Tailwind setup needed)
+  _lib/
+    sheet.ts          the Sheet type — every topic's notes are data in this shape
+    topics.ts         the registry: one entry per topic
+  _components/
+    SheetView.tsx     renders any Sheet
+  _template/          copy this to start a topic
+  routing/            TOPIC: App Router
+    sheet.ts          the notes (model, tables, gotchas, Q&A, demo links)
+    page.tsx          renders the sheet at /routing
+    ...               demo routes: (shop)/, about/, docs/[...slug]/, gotchas/
+```
 
-## Learn More
+Folders starting with `_` are private: Next never routes them, so `/_template` is a 404.
 
-To learn more about Next.js, take a look at the following resources:
+## Topics
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Topic | Sheet | Covers |
+| --- | --- | --- |
+| App Router | `/routing` | special files and their hierarchy, layouts that persist, route groups, dynamic and catch-all segments, `loading` / `error` / `not-found`, status codes when streaming |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Planned topics are listed (greyed out) on the home page and in `app/_lib/topics.ts`.
 
-## Deploy on Vercel
+## Adding a topic
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. `cp -r app/_template app/<slug>`
+2. Fill in `app/<slug>/sheet.ts`. Text fields accept `` `backticks` `` for inline code.
+3. Build the demo routes in the same folder and point the sheet's `demos` at them.
+4. In `app/_lib/topics.ts`, add the topic or flip it to `status: "ready"`. It then appears in the nav.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Demos that must run on every request (a slow layout, a layout that throws) take a dynamic
+segment such as `[ms]` or `[mode]`. Without one, `next build` prerenders the route once and the
+behaviour you wanted to watch never happens again at runtime.
+
+## Checking a sheet
+
+A `verified` line in a sheet means it was actually measured. The three checks used so far:
+
+```bash
+npx next typegen && npx tsc --noEmit    # typed route helpers catch wrong params / props
+npx eslint .
+npx next build                          # the real gate; also prints which routes are static (○) or dynamic (ƒ)
+```
+
+Status codes are measured against `npx next start`, not `next dev` — streaming changes them.
+After moving folders, `tsc` may report missing modules from `.next/dev/types`; delete that
+folder and run `npx next typegen` again.

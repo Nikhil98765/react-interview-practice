@@ -1,0 +1,66 @@
+/* Plain CSS on purpose: the sheets must read fine with no Tailwind setup to debug.
+   (Tailwind is installed — add `@import "tailwindcss";` at the top to switch it on.) */
+
+:root {
+  --bg: #fbfaf8; --fg: #1a1a1a; --muted: #5d5d5d; --line: #e2ded8;
+  --card: #ffffff; --code: #f1eee9; --accent: #8c5a2b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1a19; --fg: #ececec; --muted: #a3a3a3; --line: #343230;
+    --card: #232221; --code: #191817; --accent: #d9a066;
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+main { max-width: 900px; margin: 0 auto; padding: 16px; }
+a { color: var(--accent); }
+
+.topnav, .subnav {
+  display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
+  padding: 10px 16px; border-bottom: 1px solid var(--line);
+}
+.topnav { background: var(--card); }
+.subnav { padding: 8px 0; margin-bottom: 12px; font-size: 14px; }
+
+.sheet h1 { font-size: 24px; margin: 8px 0 4px; }
+.sheet h2 { font-size: 18px; margin: 30px 0 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+.sheet h3 { font-size: 15px; margin: 0 0 6px; }
+.sheet p, .sheet li { margin: 6px 0; }
+
+.muted { color: var(--muted); font-size: 13.5px; }
+.legend { font-size: 13px; color: var(--muted); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+.card h2 { border-top: 0; margin-top: 0; padding-top: 0; }
+.card.planned { opacity: .6; }
+.one-liner { font-weight: 600; }
+.yours { border-left: 3px solid var(--accent); padding-left: 12px; white-space: pre-wrap; }
+.demo { margin: 8px 0; }
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+  background: var(--code); padding: 1px 4px; border-radius: 3px;
+}
+pre {
+  background: var(--code); border: 1px solid var(--line); border-radius: 6px;
+  padding: 10px 12px; overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 5px 8px; vertical-align: top; }
+details { margin: 6px 0; }
+summary { cursor: pointer; font-weight: 600; }
+
+/* demo routes */
+.demo-box { border: 2px dashed var(--line); border-radius: 6px; padding: 10px 12px; margin: 10px 0; }
+.demo-box > .tag { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+button, input {
+  font: inherit; font-size: 13px; padding: 4px 10px; border: 1px solid var(--line);
+  background: var(--card); color: var(--fg); border-radius: 6px;
+}
+button { cursor: pointer; }
