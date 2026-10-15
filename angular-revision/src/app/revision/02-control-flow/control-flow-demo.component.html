@@ -1,0 +1,118 @@
+
+<!-- ** If -->
+<!-- <div *ngIf="user$ | async as user; else loading">{{user.name}}</div>
+<ng-template #loading>Loading...</ng-template>
+
+<button (click)="loggedIn.set(!loggedIn())">Toggle</button>
+
+@if(loggedIn()) {
+  <p>Welcome Back !</p>
+} @else {
+  <p>Please login</p>
+} -->
+
+<!-- <button (click)="selected.set(null)">Select</button>
+
+@if(selected(); as s) {
+  <p>{{s}}</p>
+} @else {
+  <p>None selected</p>
+} -->
+
+<!-- ** For
+        $index - index
+        $last  - boolean; true for last element
+        $count - length of the iterable
+        $odd   - boolean; true for odd index
+        $even  - boolean; true for even index
+        @empty - if items in the iterable is o, fallback
+
+        * Track - older syntax uses trackBy: which accepts a function which gets index, item now we can directly assign a property of item to it.
+                  Don't use $index because if element got added/removed or reorder between list items, rebinding happens to nodes from position where it got added and DOM state stay put on the wrong data node which will cause to bug.
+                  without track in old syntax, used to check by object reference with ===
+ -->
+<!-- <ul>
+  <li *ngFor="let order of orders(); trackBy: (index, item) => item.id">{{order.name}}</li>
+</ul> -->
+
+<!-- <ul>
+  @for (order of orders(); track order.id) {
+      <li>
+        {{$index + 1}}. Order {{order.name}} -- {{$count}} {{$last ? '(latest)': ''}}
+        <input type="text" placeholder="note">
+      </li>
+  } @empty {
+    <li>No orders</li>
+  }
+</ul>
+
+<button (click)="clear()">Clear</button>
+
+<button (click)="shuffle()">Shuffle orders</button> -->
+
+<!-- ** switch -->
+
+<!-- <div *ngFor="let o of orders(); trackBy: (index, item) => item.id">
+  <div [ngSwitch]="o.name">
+    <span *ngSwitchCase="'paid'">✅ Paid</span>
+    <span *ngSwitchCase="'pending'">⏳ Pending</span>
+    <span *ngSwitchCase="'shipped'">Shipped</span>
+  </div>
+</div> -->
+<!-- 
+<div>
+  @for (order of orders(); track order.id) {
+    @switch (order.name) {
+      @case('paid') {
+        <span >✅ Paid</span>
+      }
+      @case('pending') {
+        <span>⏳ Pending</span>
+      }
+      @default {
+        <span>📦 {{order.name}}</span>
+      }
+    }
+  }
+</div> -->
+
+
+<!-- @let total = orders().length + 1;
+
+<div>Total Items: {{total}}</div> -->
+
+<!-- ** Exercise -->
+
+<!-- Add uses a fixed id 43 on purpose: the second click duplicates the track key -> NG0955 (Gotcha 3) -->
+<button (click)="orders.update(prev => [...prev,{id: 43, status: 'delivered', note: 'order delivered'}])">Add</button>
+<button (click)="orders.set(orders().slice(1))">Remove first</button>
+<button (click)="orders.set([...orders()].reverse())">Shuffle</button>
+
+<ul>
+  @for(item of orders(); track item.id) {
+    <li>
+      <!-- {{item.status}} - {{item.note}} => {{$count}} {{$last ? '(latest)' : ''}}
+      <input type="text"> -->
+      @switch (item.status) {
+        @case ('shipped') {
+          <span>shipped</span>
+        }
+        @case('pending') {
+          <span>pending</span>
+        }
+        @default {
+          <span>{{item.status}}</span>
+        }
+      }
+    </li>
+  }
+</ul>
+
+@if(selected(); as s) {
+  <span>{{s.id}}</span>
+} @else {
+  <p>none selected</p>
+}
+
+<!-- compiles in v22: @shop isn't a block keyword. support@if.com would fail (NG5002) and need &#64; -->
+support@shop.com
