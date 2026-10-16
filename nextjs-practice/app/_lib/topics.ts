@@ -31,7 +31,7 @@ export const topics: Topic[] = [
     slug: "server-client",
     title: "Server & Client Components",
     summary: "The 'use client' boundary, what can cross it, and composition patterns.",
-    status: "planned",
+    status: "ready",
   },
   {
     slug: "data-fetching",
