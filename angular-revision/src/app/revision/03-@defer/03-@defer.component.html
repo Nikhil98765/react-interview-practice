@@ -1,0 +1,63 @@
+<!-- /03 — the @defer demo. Notes and measurements live in 03-@defer.component.ts.
+     The three spacers are for the `on viewport` variant: scroll down to reach the demo. -->
+ <div style="height:100vh"></div>
+ <div style="height:100vh"></div>
+ <div style="height:100vh"></div>
+
+ <!-- 
+    Triggers
+      idle - when browser is idle
+      viewport - when view is visible
+      interaction - when interaction is performed on the screen
+      hover - when mouse enters the view area
+      ⚠️ interaction / hover / viewport with no reference watch the @placeholder, not the screen (Gotcha 2)
+      immediate - after parent finished rendering
+      timer(2s) - after the timer mentioned time
+      when <condition> - when condition met
+ -->
+
+ <!-- <button (click)="isVisible=true">Toggle View</button> -->
+ <!-- <button #clickBtn>Interactive Button</button> -->
+
+ <!-- multiple trigger : OR -->
+  <!-- interaction without any input will be browser UI interaction -->
+  <!-- ⚠️ Measured: no. With no reference it listens on the @placeholder; clicking anything else does nothing.
+       Without a @placeholder it doesn't build: NG8019 (Gotcha 2) -->
+  <!-- @defer (when isVisible; 
+    on interaction(clickBtn);
+  ) { 
+    <app-sample />
+  } -->
+  <!-- 
+      placeholder disappear when 
+        1. minimum is done
+        2. trigger is fired.
+      timer started after it appeared in DOM
+  -->
+  <!-- @placeholder(minimum 10ms) {
+    <p>Placeholder for defer view</p>
+  } -->
+  <!-- 
+    shows if loading time is more than 50ms and minimum of 2s after trigger was fired.
+  -->
+  <!-- @loading(after 50ms; minimum 2s) {
+    <p>Loading view...</p>
+  } @error {
+    <p>Failed to load...</p>
+  } -->
+
+<!-- ** Exercise -->
+<!-- 1 -->
+<!-- <button #btn>Button</button> -->
+ <button (click)="isVisible=!isVisible">Toggle</button>
+
+<!-- @defer (on interaction(btn); prefetch on idle) { -->
+<!-- @defer (on viewport) { -->
+<!-- ⚠️ `when` is one-way: the second Toggle doesn't hide the chart (Gotcha 1) -->
+@defer (when isVisible) {
+  <app-heavy-chart />
+}@placeholder {
+  <p>Placeholder</p>
+} @loading(after 100ms; minimum 1s) {
+  <p>Loading...</p>
+}
